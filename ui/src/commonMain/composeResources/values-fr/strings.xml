@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Nov Open Reader</string>
+    <string name="empty_list_message">Scannez un stylo avec le lecteur NFC</string>
+    <string name="open_drawer">Ouvrir le tiroir</string>
+    <string name="open_menu">Ouvrir le menu</string>
+    <string name="pen_list">Stylos</string>
+    <string name="all">Tous</string>
+    <string name="load_raw_data">Charger des données brutes</string>
+    <string name="save_raw_data">Enregistrer les données brutes</string>
+</resources>

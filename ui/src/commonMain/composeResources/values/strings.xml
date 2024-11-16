@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Nov Open Reader</string>
+    <string name="empty_list_message">Scan a pen using NFC reader</string>
+    <string name="open_drawer">Open drawer</string>
+    <string name="open_menu">Open menu</string>
+    <string name="pen_list">Pen list</string>
+    <string name="all">All</string>
+    <string name="load_raw_data">Load raw data from file</string>
+    <string name="save_raw_data">Save raw data to file</string>
+</resources>
