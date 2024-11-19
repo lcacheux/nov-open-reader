@@ -1,4 +1,7 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import org.jetbrains.kotlin.gradle.utils.loadPropertyFromResources
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -68,6 +71,13 @@ kotlin {
     }
 }
 
+val localProperties = Properties().apply {
+    load(File("$rootDir/local.properties").inputStream())
+}
+val signingAvailable = listOf("keystore.path", "keystore.pass", "keystore.key", "keystore.keyPass").map {
+    localProperties.containsKey(it)
+}.all { it }
+
 android {
     namespace = "net.cacheux.nvp.app"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
@@ -76,12 +86,23 @@ android {
         applicationId = "net.cacheux.nvp.app"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.compileSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 10000
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
+        }
+    }
+
+    if (signingAvailable) {
+        signingConfigs {
+            create("release") {
+                storeFile = File(localProperties["keystore.path"] as String)
+                storePassword = localProperties["keystore.pass"] as String
+                keyAlias = localProperties["keystore.key"] as String
+                keyPassword = localProperties["keystore.keyPass"] as String
+            }
         }
     }
 
@@ -92,6 +113,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            if (signingAvailable) signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
