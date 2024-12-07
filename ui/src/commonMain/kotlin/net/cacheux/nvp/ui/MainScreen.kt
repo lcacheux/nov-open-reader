@@ -13,8 +13,6 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -43,10 +41,8 @@ import net.cacheux.nvp.model.Dose
 import net.cacheux.nvp.model.DoseGroup
 import net.cacheux.nvp.ui.ui.generated.resources.Res
 import net.cacheux.nvp.ui.ui.generated.resources.app_name
-import net.cacheux.nvp.ui.ui.generated.resources.load_raw_data
 import net.cacheux.nvp.ui.ui.generated.resources.open_drawer
 import net.cacheux.nvp.ui.ui.generated.resources.open_menu
-import net.cacheux.nvp.ui.ui.generated.resources.save_raw_data
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import java.text.SimpleDateFormat
@@ -61,12 +57,12 @@ fun MainScreen(
 
     loading: Boolean = false,
     onDismissMessage: () -> Unit = {},
-    loadingFileAvailable: Boolean = false,
 
+    loadingFileAvailable: Boolean = false,
     storeAvailable: Boolean = false,
-    onLoadingClick: () -> Unit = {},
-    onSaveStore: () -> Unit = {},
-    sideMenuParams: SideMenuParams = SideMenuParams()
+
+    sideMenuParams: SideMenuParams = SideMenuParams(),
+    dropdownMenuActions: MainDropdownMenuActions = MainDropdownMenuActions()
 ) {
     val currentDoseGroup = remember { mutableStateOf<DoseGroup?>(null) }
 
@@ -116,8 +112,7 @@ fun MainScreen(
                             drawerState.open()
                         }
                     },
-                    onLoadingClick = onLoadingClick,
-                    onSaveStore = onSaveStore
+                    dropdownMenuActions = dropdownMenuActions
                 )
             },
             scaffoldState = scaffoldState,
@@ -157,15 +152,9 @@ fun CustomTopBar(
     loadingFileAvailable: Boolean = false,
     storeAvailable: Boolean = false,
     onNavClick: () -> Unit = {},
-    onLoadingClick: () -> Unit = {},
-    onSaveStore: () -> Unit = {}
+    dropdownMenuActions: MainDropdownMenuActions = MainDropdownMenuActions(),
 ) {
     var dropdownOpened by remember { mutableStateOf(false) }
-
-    fun (() -> Unit).andClose(): () -> Unit = {
-        this()
-        dropdownOpened = false
-    }
 
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
@@ -191,29 +180,13 @@ fun CustomTopBar(
                 )
             }
 
-            DropdownMenu(
-                expanded = dropdownOpened,
-                onDismissRequest = { dropdownOpened = false}
-            ) {
-                if (loadingFileAvailable) {
-                    DropdownMenuItem(
-                        text = {
-                            Text(text = stringResource(Res.string.load_raw_data))
-                        },
-                        onClick = onLoadingClick.andClose()
-                    )
-                }
-                DropdownMenuItem(
-                    enabled = storeAvailable,
-                    text = {
-                        Text(text = stringResource(Res.string.save_raw_data))
-                    },
-                    /*leadingIcon = {
-                        Icon(Icons.Filled.Save)
-                    },*/
-                    onClick = onSaveStore.andClose()
-                )
-            }
+            MainDropdownMenu(
+                opened = dropdownOpened,
+                onDismiss = { dropdownOpened = false },
+                loadingFileAvailable = loadingFileAvailable,
+                storeAvailable = storeAvailable,
+                actions = dropdownMenuActions.and { dropdownOpened = false }
+            )
         },
     )
 }

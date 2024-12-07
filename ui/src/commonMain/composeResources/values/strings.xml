@@ -7,4 +7,5 @@
     <string name="all">All</string>
     <string name="load_raw_data">Load raw data from file</string>
     <string name="save_raw_data">Save raw data to file</string>
+    <string name="export_csv">Export to CSV file</string>
 </resources>
