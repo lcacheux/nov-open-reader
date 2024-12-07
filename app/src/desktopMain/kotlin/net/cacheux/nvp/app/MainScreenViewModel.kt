@@ -44,9 +44,5 @@ class MainScreenViewModel(
         coroutineScope.launch {
             storageRepository.saveResult(result)
         }
-
-        /*if (repository is LoadablePenInfoRepository) {
-            repository.loadData(dataReader)
-        }*/
     }
 }

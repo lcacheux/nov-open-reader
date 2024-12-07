@@ -7,4 +7,5 @@
     <string name="all">Tous</string>
     <string name="load_raw_data">Charger des données brutes</string>
     <string name="save_raw_data">Enregistrer les données brutes</string>
+    <string name="export_csv">Exporter au format CSV</string>
 </resources>

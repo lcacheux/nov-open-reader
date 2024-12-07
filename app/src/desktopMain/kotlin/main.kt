@@ -4,14 +4,18 @@ import androidx.compose.ui.window.application
 import androidx.room.Room
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
+import io.github.vinceglb.filekit.compose.rememberFileSaverLauncher
 import io.github.vinceglb.filekit.core.PickerType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import net.cacheux.nvp.app.MainScreenViewModel
 import net.cacheux.nvp.app.StorageRepository
 import net.cacheux.nvp.app.TestPenInfoRepository
+import net.cacheux.nvp.app.utils.toCsv
 import net.cacheux.nvp.model.DoseGroup
+import net.cacheux.nvp.ui.MainDropdownMenuActions
 import net.cacheux.nvp.ui.MainScreen
 import net.cacheux.nvp.ui.SideMenuParams
 import net.cacheux.nvplib.storage.room.NvpDatabase
@@ -32,16 +36,21 @@ fun main() = application {
         onCloseRequest = ::exitApplication,
         title = "Nov Open Reader",
     ) {
-        val launcher = rememberFilePickerLauncher(
+        val ioScope = CoroutineScope(Dispatchers.IO)
+
+        val loadRawDataPicker = rememberFilePickerLauncher(
             type = PickerType.File(),
             title = "Load file"
         ) { file ->
             file?.let {
-                val scope = CoroutineScope(Dispatchers.IO)
-                scope.launch {
+                ioScope.launch {
                     viewModel.loadFromFile(it.readBytes().inputStream())
                 }
             }
+        }
+
+        val saveCsvPicker = rememberFileSaverLauncher { file ->
+            // TODO feedback message
         }
 
         MainScreen(
@@ -49,10 +58,22 @@ fun main() = application {
             loadingFileAvailable = true,
 
             storeAvailable = viewModel.store.collectAsState().value != null,
-            onLoadingClick = { launcher.launch() },
-            onSaveStore = {
-                //saveToFile()
-            },
+
+            dropdownMenuActions = MainDropdownMenuActions(
+                onLoadingClick = { loadRawDataPicker.launch() },
+                onExportCsv = {
+                    ioScope.launch {
+                        saveCsvPicker.launch(
+                            baseName = viewModel.getCurrentPen().value?.let {
+                                "nvp_export_$it"
+                            } ?: "nvp_export_all",
+                            extension = "csv",
+                            bytes = viewModel.doseList.first().toCsv().toByteArray()
+                        )
+                    }
+                }
+            ),
+
             sideMenuParams = SideMenuParams(
                 penList = viewModel.getPenList().collectAsState(listOf()).value.map { it.serial },
                 selectedPen = viewModel.getCurrentPen().collectAsState().value,
