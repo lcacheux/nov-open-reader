@@ -26,13 +26,7 @@ class RoomDoseStorageTest {
 
     @Test
     fun testAddDose() = runBlocking {
-        val storage = initStorage()
-
-        storage.addDose(Dose(12345678L, 2), PenInfos("Novopen 6", "ABCD1234"))
-        storage.addDose(Dose(12345690L, 42), PenInfos("Novopen 6", "ABCD1234"))
-        storage.addDose(Dose(12345700L, 11), PenInfos("Novopen 6", "ABCD1234"))
-        storage.addDose(Dose(12346800L, 2), PenInfos("Novopen Echo+", "ABCD2345"))
-        storage.addDose(Dose(12346850L, 37), PenInfos("Novopen Echo+", "ABCD2345"))
+        val storage = initStorage().apply { createDataset() }
 
         with(storage.listAllPens().first()) {
             assertEquals(2, size)
@@ -61,10 +55,26 @@ class RoomDoseStorageTest {
         }
     }
 
+    @Test
+    fun testGetLastDose() = runBlocking {
+        val storage = initStorage().apply { createDataset() }
+
+        assertEquals(12345700L, storage.getLastDose("ABCD1234").first()?.time)
+        assertEquals(12346850L, storage.getLastDose("ABCD2345").first()?.time)
+    }
+
     private suspend fun initStorage(): RoomDoseStorage
         = RoomDoseStorage(
             databaseBuilder(File(System.getProperty("java.io.tmpdir"), "test.db").absolutePath)
         ).apply {
             deleteAll()
         }
+
+    private suspend fun RoomDoseStorage.createDataset() {
+        addDose(Dose(12345678L, 2), PenInfos("Novopen 6", "ABCD1234"))
+        addDose(Dose(12345690L, 42), PenInfos("Novopen 6", "ABCD1234"))
+        addDose(Dose(12345700L, 11), PenInfos("Novopen 6", "ABCD1234"))
+        addDose(Dose(12346800L, 2), PenInfos("Novopen Echo+", "ABCD2345"))
+        addDose(Dose(12346850L, 37), PenInfos("Novopen Echo+", "ABCD2345"))
+    }
 }

@@ -23,7 +23,7 @@ interface DoseDao {
     fun getAllDosesWithPen(): Flow<List<DoseWithPen>>
 
     @Transaction
-    @Query("SELECT * FROM dose, pen WHERE pen.serial = :serial ORDER BY time DESC LIMIT 1")
+    @Query("SELECT * FROM dose, pen WHERE pen.serial = :serial AND dose.pen = pen.id ORDER BY time DESC LIMIT 1")
     fun getLastDose(serial: String): Flow<DoseWithPen?>
 
     @Insert
