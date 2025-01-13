@@ -42,7 +42,7 @@ class NfcController(
         onError: (Exception) -> Unit = {},
         stopCondition: StopCondition = noStopCondition
     ) {
-        nfcAdapter.enableReaderMode(
+        nfcAdapter?.enableReaderMode(
             activity,
             { tag ->
                 runner {
@@ -79,6 +79,6 @@ class NfcController(
      * Stop monitoring NFC reader.
      */
     fun stopNfc() {
-        nfcAdapter.disableReaderMode(activity)
+        nfcAdapter?.disableReaderMode(activity)
     }
 }
