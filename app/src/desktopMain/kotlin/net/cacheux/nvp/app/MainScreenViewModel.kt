@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import net.cacheux.nvp.logging.logDebug
 import net.cacheux.nvp.model.Dose
+import net.cacheux.nvp.model.DoseGroup
 import net.cacheux.nvplib.NvpController
 import net.cacheux.nvplib.testing.TestingDataReader
 import java.io.InputStream
@@ -17,6 +18,7 @@ import java.io.InputStream
 class MainScreenViewModel(
     private val repository: PenInfoRepository,
     private val storageRepository: StorageRepository,
+    private val doseListUseCase: DoseListUseCase,
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 ) {
     fun getPenList() = storageRepository.getPenList()
@@ -30,7 +32,12 @@ class MainScreenViewModel(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val doseList: Flow<List<Dose>> = currentPen.flatMapLatest {
+    val doseList: Flow<List<DoseGroup>> = currentPen.flatMapLatest {
+        doseListUseCase.getDoseGroups(it)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val flatDoseList: Flow<List<Dose>> = currentPen.flatMapLatest {
         storageRepository.getDoseList(it)
     }
 

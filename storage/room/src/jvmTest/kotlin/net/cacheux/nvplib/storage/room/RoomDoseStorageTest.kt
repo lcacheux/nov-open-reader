@@ -1,12 +1,14 @@
 package net.cacheux.nvplib.storage.room
 
+import androidx.room.Room
+import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import net.cacheux.nvp.model.Dose
 import net.cacheux.nvp.model.PenInfos
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import java.io.File
 
 class RoomDoseStorageTest {
     @Test
@@ -63,12 +65,13 @@ class RoomDoseStorageTest {
         assertEquals(12346850L, storage.getLastDose("ABCD2345").first()?.time)
     }
 
-    private suspend fun initStorage(): RoomDoseStorage
+    private fun initStorage(): RoomDoseStorage
         = RoomDoseStorage(
-            databaseBuilder(File(System.getProperty("java.io.tmpdir"), "test.db").absolutePath)
-        ).apply {
-            deleteAll()
-        }
+            Room.inMemoryDatabaseBuilder<NvpDatabase>()
+                .setDriver(BundledSQLiteDriver())
+                .setQueryCoroutineContext(Dispatchers.IO)
+                .build()
+        )
 
     private suspend fun RoomDoseStorage.createDataset() {
         addDose(Dose(12345678L, 2), PenInfos("Novopen 6", "ABCD1234"))

@@ -32,6 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -94,11 +95,13 @@ fun MainScreen(
             SideMenu(
                 SideMenuParams(
                     sideMenuParams.penList,
-                    sideMenuParams.selectedPen
-                ) {
-                    sideMenuParams.onItemClick(it)
-                    scope.launch { drawerState.close() }
-                }
+                    sideMenuParams.selectedPen,
+                    onItemClick = {
+                        sideMenuParams.onItemClick(it)
+                        scope.launch { drawerState.close() }
+                    },
+                    sideMenuParams.onSettingsClick
+                )
             )
         }
     ) {
@@ -165,7 +168,10 @@ fun CustomTopBar(
             Text(text = stringResource(Res.string.app_name))
         },
         navigationIcon = {
-            IconButton(onClick = onNavClick) {
+            IconButton(
+                onClick = onNavClick,
+                modifier = Modifier.testTag("open_drawer_button"),
+            ) {
                 Icon(
                     imageVector = Icons.Filled.Menu,
                     contentDescription = stringResource(Res.string.open_drawer)

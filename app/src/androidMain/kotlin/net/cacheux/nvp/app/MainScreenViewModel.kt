@@ -12,15 +12,21 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import net.cacheux.nvp.logging.logDebug
 import net.cacheux.nvp.model.Dose
+import net.cacheux.nvp.model.DoseGroup
 import javax.inject.Inject
 
 @HiltViewModel
 class MainScreenViewModel @Inject constructor(
     private val repository: PenInfoRepository,
     private val storageRepository: StorageRepository,
-
+    private val preferencesRepository: PreferencesRepository,
 ): ViewModel() {
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
+
+    private val doseListUseCase: DoseListUseCase = DoseListUseCase(
+        storageRepository,
+        preferencesRepository
+    )
 
     fun getPenList() = storageRepository.getPenList()
 
@@ -40,7 +46,12 @@ class MainScreenViewModel @Inject constructor(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val doseList: Flow<List<Dose>> = currentPen.flatMapLatest {
+    val doseList: Flow<List<DoseGroup>> = currentPen.flatMapLatest {
+        doseListUseCase.getDoseGroups(it)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val flatDoseList: Flow<List<Dose>> = currentPen.flatMapLatest {
         storageRepository.getDoseList(it)
     }
 

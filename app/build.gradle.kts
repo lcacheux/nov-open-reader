@@ -29,7 +29,23 @@ kotlin {
             implementation(libs.androidx.activity.compose)
 
             implementation(libs.hilt.android)
+
+            implementation(libs.androidx.datastore.core)
+            implementation(libs.androidx.datastore.preferences)
+
             configurations["kspAndroid"].dependencies.add(project.dependencies.create(libs.hilt.android.compiler.get()))
+        }
+
+        val androidInstrumentedTest by getting {
+            dependencies {
+                implementation(libs.espresso.core)
+                implementation(libs.androidx.test.ext.junit)
+                implementation(libs.hilt.android.testing)
+                implementation(libs.mockito.android)
+                implementation(libs.mockito.kotlin)
+                implementation(compose.desktop.uiTestJUnit4)
+                configurations["ksp"].dependencies.add(project.dependencies.create(libs.hilt.android.compiler.get()))
+            }
         }
 
         commonMain.dependencies {
@@ -66,6 +82,13 @@ kotlin {
                 implementation(libs.filekit.compose)
             }
         }
+
+        val desktopTest by getting {
+            dependencies {
+                implementation(libs.junit)
+                implementation(libs.mockito.kotlin)
+            }
+        }
     }
 }
 
@@ -87,7 +110,7 @@ android {
         versionCode = 10001
         versionName = "1.0.1"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "net.cacheux.nvp.app.CustomTestRunner"
         vectorDrawables {
             useSupportLibrary = true
         }

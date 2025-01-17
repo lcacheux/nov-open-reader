@@ -9,6 +9,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -17,10 +21,12 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import net.cacheux.nvp.app.repository.ActivityRequirer
 import net.cacheux.nvp.app.utils.toCsv
-import net.cacheux.nvp.model.DoseGroup
 import net.cacheux.nvp.ui.MainDropdownMenuActions
 import net.cacheux.nvp.ui.MainScreen
+import net.cacheux.nvp.ui.SettingsScreen
+import net.cacheux.nvp.ui.SettingsScreenParams
 import net.cacheux.nvp.ui.SideMenuParams
+import net.cacheux.nvp.ui.asStateWrapper
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -30,6 +36,7 @@ class MainActivity : ComponentActivity() {
     lateinit var repository: PenInfoRepository
 
     private val viewModel: MainScreenViewModel by viewModels()
+    private val settingsViewModel: SettingsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,25 +47,41 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    MainScreen(
-                        doseList = DoseGroup.createDoseGroups(viewModel.doseList.collectAsState(listOf()).value).reversed(),
-                        message = viewModel.getReadError().collectAsState().value,
+                    var settingsOpened by remember { mutableStateOf(false) }
 
-                        loading = viewModel.isReading().collectAsState().value,
-                        onDismissMessage = viewModel::onDismissMessage,
-                        storeAvailable = viewModel.store.collectAsState().value != null,
-
-                        dropdownMenuActions = MainDropdownMenuActions(
-                            onSaveStore = { saveRawFile() },
-                            onExportCsv = { saveCsvFile() }
-                        ),
-
-                        sideMenuParams = SideMenuParams(
-                            penList = viewModel.getPenList().collectAsState(listOf()).value.map { it.serial },
-                            selectedPen = viewModel.getCurrentPen().collectAsState().value,
-                            onItemClick = { viewModel.setCurrentPen(it) }
+                    if (settingsOpened) {
+                        SettingsScreen(
+                            params = SettingsScreenParams(
+                                onBack = { settingsOpened = false },
+                                groupDose = settingsViewModel.groupEnabled.asStateWrapper(),
+                                groupDelay = settingsViewModel.groupDelay.asStateWrapper(),
+                                autoIgnoreEnabled = settingsViewModel.autoIgnoreEnabled.asStateWrapper(),
+                                autoIgnoreValue = settingsViewModel.autoIgnoreValue.asStateWrapper(),
+                            )
                         )
-                    )
+                    } else {
+                        MainScreen(
+                            doseList = viewModel.doseList.collectAsState(listOf()).value.reversed(),
+                            message = viewModel.getReadError().collectAsState().value,
+
+                            loading = viewModel.isReading().collectAsState().value,
+                            onDismissMessage = viewModel::onDismissMessage,
+                            storeAvailable = viewModel.store.collectAsState().value != null,
+
+                            dropdownMenuActions = MainDropdownMenuActions(
+                                onSaveStore = { saveRawFile() },
+                                onExportCsv = { saveCsvFile() }
+                            ),
+
+                            sideMenuParams = SideMenuParams(
+                                penList = viewModel.getPenList()
+                                    .collectAsState(listOf()).value.map { it.serial },
+                                selectedPen = viewModel.getCurrentPen().collectAsState().value,
+                                onItemClick = { viewModel.setCurrentPen(it) },
+                                onSettingsClick = { settingsOpened = true }
+                            )
+                        )
+                    }
                 }
             }
         }
@@ -77,7 +100,7 @@ class MainActivity : ComponentActivity() {
         registerForActivityResult(ActivityResultContracts.CreateDocument("text/csv")) { uri ->
             uri?.let {
                 CoroutineScope(Dispatchers.IO).launch {
-                    val content = viewModel.doseList.first().toCsv()
+                    val content = viewModel.flatDoseList.first().toCsv()
                     contentResolver.openOutputStream(it)?.write(content.toByteArray())
                 }
             }
