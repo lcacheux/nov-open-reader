@@ -24,6 +24,7 @@ kotlin {
 
         commonMain.dependencies {
             implementation(project(":model"))
+            implementation(project(":utils"))
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
@@ -36,6 +37,10 @@ kotlin {
             implementation(libs.junit)
         }
     }
+}
+
+compose.resources {
+    publicResClass = true
 }
 
 android {
@@ -71,7 +76,4 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-}
-dependencies {
-    implementation(libs.androidx.foundation.android)
 }

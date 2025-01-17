@@ -13,13 +13,15 @@ import androidx.compose.ui.unit.dp
 import net.cacheux.nvp.ui.ui.generated.resources.Res
 import net.cacheux.nvp.ui.ui.generated.resources.all
 import net.cacheux.nvp.ui.ui.generated.resources.pen_list
+import net.cacheux.nvp.ui.ui.generated.resources.settings
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 data class SideMenuParams(
     val penList: List<String> = listOf(),
     val selectedPen: String? = null,
-    val onItemClick: (String?) -> Unit = {}
+    val onItemClick: (String?) -> Unit = {},
+    val onSettingsClick: () -> Unit = {},
 )
 
 @Composable
@@ -38,6 +40,15 @@ fun SideMenu(
         params.penList.forEach {
             SideMenuPen(it, params.selectedPen, onClick = params.onItemClick)
         }
+
+        HorizontalDivider()
+
+        NavigationDrawerItem(
+            modifier = Modifier.padding(8.dp),
+            label = { Text(text = stringResource(Res.string.settings)) },
+            selected = false,
+            onClick = params.onSettingsClick
+        )
     }
 }
 

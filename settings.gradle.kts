@@ -13,14 +13,15 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "NVP Lib"
+rootProject.name = "nov-open-reader"
+
 include(":app")
+include(":logging")
+include(":model")
+include(":utils")
+include(":ui")
 include(":nvplib:core")
 include(":nvplib:nfc")
-include(":logging")
-include(":utils")
 include(":nvplib:testing")
 include(":storage:room")
 include(":storage:storage-interface")
-include(":ui")
-include(":model")

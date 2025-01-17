@@ -8,4 +8,19 @@
     <string name="load_raw_data">Charger des données brutes</string>
     <string name="save_raw_data">Enregistrer les données brutes</string>
     <string name="export_csv">Exporter au format CSV</string>
+    <string name="back_button">Bouton retour</string>
+
+    <string name="ok">OK</string>
+    <string name="cancel">Annuler</string>
+
+    <!-- Settings screen -->
+    <string name="settings">Paramètres</string>
+    <string name="group_doses">Grouper les doses</string>
+    <string name="group_doses_details">Afficher les doses dans l'intervalle spécifié comme une seule</string>
+    <string name="group_delay">Intervalle de groupe</string>
+    <string name="group_delay_suffix"> secondes</string>
+    <string name="auto_ignore">Ignorer les premières petites valeurs</string>
+    <string name="auto_ignore_details">Les valeurs en dessous de la valeur spécifiée ne seront pas comptées</string>
+    <string name="auto_ignore_value">En dessous de</string>
+    <string name="auto_ignore_value_suffix"> unités</string>
 </resources>

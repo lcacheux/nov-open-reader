@@ -8,4 +8,19 @@
     <string name="load_raw_data">Load raw data from file</string>
     <string name="save_raw_data">Save raw data to file</string>
     <string name="export_csv">Export to CSV file</string>
+    <string name="back_button">Back button</string>
+
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- Settings screen -->
+    <string name="settings">Settings</string>
+    <string name="group_doses">Group doses</string>
+    <string name="group_doses_details">Display all doses within the specified delay as one</string>
+    <string name="group_delay">Group delay</string>
+    <string name="group_delay_suffix"> seconds</string>
+    <string name="auto_ignore">Ignore first small values</string>
+    <string name="auto_ignore_details">Values below specified limit doesn't count for total</string>
+    <string name="auto_ignore_value">Below</string>
+    <string name="auto_ignore_value_suffix"> units</string>
 </resources>
