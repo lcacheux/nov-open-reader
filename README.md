@@ -15,6 +15,18 @@ Two components are used :
   results. This library is plain JVM Kotlin and doesn't require any dependency.
 - *nvplib-nfc*: A wrapper for the core library that add support for Android NFC API.
 
+The library is available on Maven Central. To import it, use the following dependencies :
+```kotlin
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  implementation("net.cacheux.nvplib:nvplib-core:0.1.0")
+  implementation("net.cacheux.nvplib:nvplib-nfc:0.1.0")    
+}
+```
+
 Thanks to [JamOrHam](https://github.com/jamorham) for providing 
 [a comprehensive implementation](https://github.com/NightscoutFoundation/xDrip/tree/master/app/src/main/java/com/eveningoutpost/dexdrip/insulin/opennov)
 of the NovoPen protocol for xDrip+ that has been very helpful in order to develop NvpLib.
