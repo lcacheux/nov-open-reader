@@ -1,4 +1,5 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.kotlin.multiplatform) apply false
     alias(libs.plugins.android.application) apply false
@@ -7,4 +8,27 @@ plugins {
     alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.hilt.android) apply false
     alias(libs.plugins.ksp) apply false
+    signing
+}
+
+val localProperties by extra { Properties().apply {
+    load(File("$rootDir/local.properties").inputStream())
+} }
+
+val gpgSigningAvailable = listOf("gpgSigningKey", "gpgSigningPass").map {
+    localProperties.containsKey(it)
+}.all { it }
+
+val signingIfAvailable by extra {
+    { publication: Publication ->
+        if (gpgSigningAvailable) {
+            extensions.create<SigningExtension>("sign${publication.name}").apply {
+                sign(publication)
+                useInMemoryPgpKeys(
+                    localProperties["gpgSigningKey"] as String,
+                    localProperties["gpgSigningPass"] as String
+                )
+            }
+        }
+    }
 }

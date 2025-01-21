@@ -92,9 +92,7 @@ kotlin {
     }
 }
 
-val localProperties = Properties().apply {
-    load(File("$rootDir/local.properties").inputStream())
-}
+val localProperties : Properties by project
 val signingAvailable = listOf("keystore.path", "keystore.pass", "keystore.key", "keystore.keyPass").map {
     localProperties.containsKey(it)
 }.all { it }
