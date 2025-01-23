@@ -22,8 +22,8 @@ repositories {
 }
 
 dependencies {
-  implementation("net.cacheux.nvplib:nvplib-core:0.1.0")
-  implementation("net.cacheux.nvplib:nvplib-nfc:0.1.0")
+  implementation("net.cacheux.nvplib:nvplib-core:0.1.1")
+  implementation("net.cacheux.nvplib:nvplib-nfc:0.1.1")
 }
 ```
 

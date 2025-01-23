@@ -62,7 +62,7 @@ publishing {
         create<MavenPublication>("mavenNfc") {
             groupId = "net.cacheux.nvplib"
             artifactId = "nvplib-nfc"
-            version = "0.1.0"
+            version = "0.1.1"
             afterEvaluate {
                 from(components["release"])
                 artifact(tasks["dokkaHtmlJar"])
