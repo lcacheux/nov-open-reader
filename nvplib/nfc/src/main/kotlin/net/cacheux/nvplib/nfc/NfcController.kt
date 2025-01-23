@@ -49,22 +49,24 @@ class NfcController(
                     onTagDetected(tag)
                     try {
                         val isoDep = IsoDep.get(tag)
-                        isoDep.connect()
+                        isoDep?.let {
+                            it.connect()
 
-                        // Override the NfcDataReader to call onDataSent / onDataReceived
-                        val dataReader = object : NfcDataReader(isoDep) {
-                            override fun onDataSent(data: ByteArray) = onDataSent(data)
-                            override fun onDataReceived(data: ByteArray) = onDataReceived(data)
-                        }
+                            // Override the NfcDataReader to call onDataSent / onDataReceived
+                            val dataReader = object : NfcDataReader(it) {
+                                override fun onDataSent(data: ByteArray) = onDataSent(data)
+                                override fun onDataReceived(data: ByteArray) = onDataReceived(data)
+                            }
 
-                        val controller = NvpController(dataReader)
+                            val controller = NvpController(dataReader)
 
-                        isoDep.timeout = 1000
+                            it.timeout = 1000
 
-                        val result = controller.dataRead(stopCondition)
-                        onDataRead(result)
+                            val result = controller.dataRead(stopCondition)
+                            onDataRead(result)
 
-                        isoDep.close()
+                            it.close()
+                        } ?: throw IllegalStateException("Incorrect tag detected")
                     } catch (e: Exception) {
                         onError(e)
                     }
