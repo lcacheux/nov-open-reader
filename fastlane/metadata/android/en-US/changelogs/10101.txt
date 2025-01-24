@@ -1,0 +1,1 @@
+Fix error message when using a non supported NFC tag

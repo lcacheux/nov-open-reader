@@ -1,0 +1,1 @@
+Simple application to read content of Novopen insulin pens using NFC

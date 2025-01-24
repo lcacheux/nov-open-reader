@@ -1,0 +1,9 @@
+Nov Open Reader is a small application to read data from NFC insulin pens from Novo Nordisk : NovoPen 6 and NovoPen Echo Plus.
+
+Put the pen on the NFC reader of your phone to start retrieving its data, which will be simply displayed as a list. Doses within a one minute delay will be grouped as one, and first purging dose (2 units or less) will be hidden. Click on a grouped dose to display the details.
+
+Source code available at https://github.com/lcacheux/nov-open-reader
+
+This application is not developed or endorsed by Novo Nordisk.
+
+This application is intended for informational purposes only and should not be used as a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding the use of insulin pens or any other medical condition.

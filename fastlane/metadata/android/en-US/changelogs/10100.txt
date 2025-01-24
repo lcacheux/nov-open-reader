@@ -1,0 +1,3 @@
+Add a settings screen to configure :
+- Enabling dose grouping on a specified short amount of time
+- Hiding of small purge doses at the beginning of a group
