@@ -62,7 +62,7 @@ class MainActivity : ComponentActivity() {
                     } else {
                         MainScreen(
                             doseList = viewModel.doseList.collectAsState(listOf()).value.reversed(),
-                            message = viewModel.getReadError().collectAsState().value,
+                            message = viewModel.getReadMessage().collectAsState().value,
 
                             loading = viewModel.isReading().collectAsState().value,
                             onDismissMessage = viewModel::onDismissMessage,
@@ -70,7 +70,8 @@ class MainActivity : ComponentActivity() {
 
                             dropdownMenuActions = MainDropdownMenuActions(
                                 onSaveStore = { saveRawFile() },
-                                onExportCsv = { saveCsvFile() }
+                                onExportCsv = { saveCsvFile() },
+                                onImportCsv = { loadCsvFile() }
                             ),
 
                             sideMenuParams = SideMenuParams(
@@ -106,6 +107,15 @@ class MainActivity : ComponentActivity() {
             }
         }
 
+    private val loadCsvFile =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            uri?.let { safeUri ->
+                contentResolver.openInputStream(safeUri)?.let {
+                    viewModel.loadCsvFile(it)
+                }
+            }
+        }
+
     private fun saveRawFile() {
         saveRawFile.launch("nvp_data.txt")
     }
@@ -116,6 +126,10 @@ class MainActivity : ComponentActivity() {
                 "nvp_export_$it.csv"
             } ?: "nvp_export_all.csv"
         )
+    }
+
+    private fun loadCsvFile() {
+        loadCsvFile.launch("text/*")
     }
 
     override fun onStart() {

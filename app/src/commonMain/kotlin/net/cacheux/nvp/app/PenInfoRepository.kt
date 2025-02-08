@@ -9,9 +9,12 @@ interface PenInfoRepository {
     fun getDoseList(): StateFlow<List<Dose>>
     fun getDataStore(): StateFlow<ByteArrayStore?>
 
-    fun isReading(): StateFlow<Boolean>
-    fun getReadMessage(): StateFlow<String?>
-    fun clearReadMessage()
-
     fun registerOnDataReceivedCallback(callback: (result: PenResult) -> Unit)
+    fun registerCallbacks(callbacks: Callbacks)
+
+    data class Callbacks(
+        val onReadStart: () -> Unit,
+        val onReadStop: () -> Unit,
+        val onError: (e: Exception) -> Unit
+    )
 }

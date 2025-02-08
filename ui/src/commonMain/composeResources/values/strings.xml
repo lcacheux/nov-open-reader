@@ -8,6 +8,7 @@
     <string name="load_raw_data">Load raw data from file</string>
     <string name="save_raw_data">Save raw data to file</string>
     <string name="export_csv">Export to CSV file</string>
+    <string name="import_csv">Import from CSV file</string>
     <string name="back_button">Back button</string>
 
     <string name="ok">OK</string>

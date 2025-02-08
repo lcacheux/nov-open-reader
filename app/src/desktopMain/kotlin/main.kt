@@ -16,10 +16,10 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import net.cacheux.nvp.app.DoseListUseCase
 import net.cacheux.nvp.app.MainScreenViewModel
-import net.cacheux.nvp.app.repository.PreferencesRepositoryImpl
 import net.cacheux.nvp.app.SettingsViewModel
 import net.cacheux.nvp.app.StorageRepository
 import net.cacheux.nvp.app.TestPenInfoRepository
+import net.cacheux.nvp.app.repository.PreferencesRepositoryImpl
 import net.cacheux.nvp.app.utils.toCsv
 import net.cacheux.nvp.ui.MainDropdownMenuActions
 import net.cacheux.nvp.ui.MainScreen
@@ -47,21 +47,30 @@ val mainScreenViewModel = MainScreenViewModel(
 
 val settingsViewModel = SettingsViewModel(preferencesRepository)
 
+val ioScope = CoroutineScope(Dispatchers.IO)
+
 fun main() = application {
     Window(
         onCloseRequest = ::exitApplication,
         title = "Nov Open Reader",
     ) {
-        val ioScope = CoroutineScope(Dispatchers.IO)
+
 
         val loadRawDataPicker = rememberFilePickerLauncher(
             type = PickerType.File(),
             title = "Load file"
         ) { file ->
             file?.let {
-                ioScope.launch {
-                    mainScreenViewModel.loadFromFile(it.readBytes().inputStream())
-                }
+                mainScreenViewModel.loadFromFile(it)
+            }
+        }
+
+        val loadCsvPicker = rememberFilePickerLauncher(
+            type = PickerType.File(listOf("csv")),
+            title = "Load CSV"
+        ) { file ->
+            file?.let {
+                mainScreenViewModel.loadCsvFile(it)
             }
         }
 
@@ -86,6 +95,10 @@ fun main() = application {
                 doseList = mainScreenViewModel.doseList.collectAsState(listOf()).value.reversed(),
                 loadingFileAvailable = true,
 
+                loading = mainScreenViewModel.isReading().collectAsState().value,
+                message = mainScreenViewModel.getReadMessage().collectAsState().value,
+                onDismissMessage = { mainScreenViewModel.clearPopup() },
+
                 storeAvailable = mainScreenViewModel.store.collectAsState().value != null,
 
                 dropdownMenuActions = MainDropdownMenuActions(
@@ -100,7 +113,8 @@ fun main() = application {
                                 bytes = mainScreenViewModel.flatDoseList.first().toCsv().toByteArray()
                             )
                         }
-                    }
+                    },
+                    onImportCsv = { loadCsvPicker.launch() }
                 ),
 
                 sideMenuParams = SideMenuParams(

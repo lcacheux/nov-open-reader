@@ -11,3 +11,29 @@ fun List<Dose>.toCsv(): String {
     }
     return builder.toString()
 }
+
+fun String.csvToDoseList(): List<Dose> {
+    return split("\n").mapNotNull {
+        try {
+            it.csvLineToDose()
+        } catch (e: IllegalArgumentException) {
+            null
+        }
+    }
+}
+
+@Throws(IllegalArgumentException::class)
+fun String.csvLineToDose(): Dose {
+    return with (split(";")) {
+        if (size != 4) throw IllegalArgumentException("Incorrect CSV line: not enough fields")
+        try {
+            Dose(
+                time = get(1).toLong(),
+                value = get(3).toInt(),
+                serial = get(0)
+            )
+        } catch (e: NumberFormatException) {
+            throw IllegalArgumentException("Incorrect CSV line: wrong number format")
+        }
+    }
+}

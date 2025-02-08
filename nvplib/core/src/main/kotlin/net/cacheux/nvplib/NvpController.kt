@@ -89,7 +89,7 @@ class NvpController(
 
             val info = phdManager.decodeDataApduRequest<FullSpecification>(askInformation(dataApdu.invokeId, config))
 
-            val model = info.model.first()
+            val model = info.model.joinToString(" ")
             val serial = info.specification.serial
             val startTime = info.relativeTime
             val doseList = mutableListOf<InsulinDose>()

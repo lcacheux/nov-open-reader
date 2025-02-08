@@ -1,7 +1,9 @@
 package net.cacheux.nvp.app
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -10,13 +12,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
+import net.cacheux.nvp.app.utils.csvToDoseList
 import net.cacheux.nvp.logging.logDebug
 import net.cacheux.nvp.model.Dose
 import net.cacheux.nvp.model.DoseGroup
+import java.io.InputStream
 import javax.inject.Inject
 
 @HiltViewModel
 class MainScreenViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val repository: PenInfoRepository,
     private val storageRepository: StorageRepository,
     private val preferencesRepository: PreferencesRepository,
@@ -30,11 +35,15 @@ class MainScreenViewModel @Inject constructor(
 
     fun getPenList() = storageRepository.getPenList()
 
-    fun isReading() = repository.isReading()
-    fun getReadError() = repository.getReadMessage()
+    private val isReading = MutableStateFlow(false)
+    fun isReading(): StateFlow<Boolean> = isReading
+
+    private val readMessage = MutableStateFlow<String?>(null)
+    fun getReadMessage(): StateFlow<String?> = readMessage
 
     fun onDismissMessage() {
-        repository.clearReadMessage()
+        isReading.value = false
+        readMessage.value = null
     }
 
     private val currentPen = MutableStateFlow<String?>(null)
@@ -57,11 +66,44 @@ class MainScreenViewModel @Inject constructor(
 
     val store = repository.getDataStore()
 
+    fun loadCsvFile(input: InputStream) {
+        input.reader().use {
+            it.readText().csvToDoseList().let { doseList ->
+                if (doseList.isEmpty()) {
+                    readMessage.value = "No data found in CSV file"
+                } else {
+                    coroutineScope.launch {
+                        readMessage.value = "Loading CSV..."
+                        isReading.value = true
+                        storageRepository.saveDoseList(doseList)
+                        readMessage.value = "CSV loaded"
+                        isReading.value = false
+                    }
+                }
+            }
+        }
+    }
+
     init {
         repository.registerOnDataReceivedCallback { result ->
             coroutineScope.launch {
                 storageRepository.saveResult(result)
             }
         }
+
+        repository.registerCallbacks(PenInfoRepository.Callbacks(
+            onReadStart = {
+                isReading.value = true
+                readMessage.value = context.resources.getString(R.string.reading_pen)
+            },
+            onReadStop = {
+                isReading.value = false
+                readMessage.value = null
+            },
+            onError = { e ->
+                isReading.value = false
+                readMessage.value = e.message
+            }
+        ))
     }
 }

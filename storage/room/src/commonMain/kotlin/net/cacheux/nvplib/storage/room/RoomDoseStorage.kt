@@ -30,7 +30,7 @@ class RoomDoseStorage(
                 )
             )
         } catch (e: SQLiteException) {
-            // Ignore duplicate inserts
+            // Ignore
         }
     }
 

@@ -10,5 +10,11 @@ data class Dose(
 
     fun displayedValue() = String.format("%.1f", value.toFloat() / 10)
 
+    /**
+     * Compare with another without the ignored field
+     */
+    fun compareValues(other: Dose) =
+        time == other.time && value == other.value && serial == other.serial
+
     override fun date() = timestampToDate(time)
 }

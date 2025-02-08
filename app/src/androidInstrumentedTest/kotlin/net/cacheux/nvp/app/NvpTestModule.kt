@@ -25,15 +25,9 @@ class NvpTestModule {
     fun providePenInfoRepository(): PenInfoRepository {
         return object: BasePenInfoRepository() {
             override fun getDataStore() = MutableStateFlow(null)
-
-            override fun isReading() = MutableStateFlow(false)
-
-            override fun getReadMessage() = MutableStateFlow(null)
-
-            override fun clearReadMessage() {
+            override fun registerCallbacks(callbacks: PenInfoRepository.Callbacks) {
                 // Ignore
             }
-
         }
     }
 

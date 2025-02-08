@@ -5,6 +5,7 @@ import net.cacheux.nvp.model.Dose
 import net.cacheux.nvp.model.PenInfos
 
 interface DoseStorage {
+
     suspend fun addDose(dose: Dose, pen: PenInfos)
 
     fun getAllDoses(serial: String? = null): Flow<List<Dose>>

@@ -272,4 +272,6 @@ fun testDoseGroup(date: Long, value: Int) = DoseGroup(
 )
 
 fun testDateTime(hours: Int, min: Int, sec: Int, date: Int = 1, month: Int = 1, year: Int = 2024) =
-    GregorianCalendar.getInstance().apply { set(year, month, date, hours, min, sec) }.time.time
+    GregorianCalendar.getInstance().apply {
+        set(year, month, date, hours, min, sec)
+    }.time.time

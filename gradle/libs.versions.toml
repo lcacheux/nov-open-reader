@@ -53,6 +53,6 @@ espresso-core = { group = "androidx.test.espresso", name = "espresso-core", vers
 mockito = { group = "org.mockito", name = "mockito-core", version = "5.12.0" }
 mockito-android = { group = "org.mockito", name = "mockito-android", version = "5.12.0" }
 mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version = "5.4.0" }
-
+turbine = { group = "app.cash.turbine", name = "turbine", version = "1.2.0" }
 
 
