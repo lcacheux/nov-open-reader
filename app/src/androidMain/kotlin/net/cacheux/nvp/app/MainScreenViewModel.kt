@@ -70,13 +70,13 @@ class MainScreenViewModel @Inject constructor(
         input.reader().use {
             it.readText().csvToDoseList().let { doseList ->
                 if (doseList.isEmpty()) {
-                    readMessage.value = "No data found in CSV file"
+                    readMessage.value = context.resources.getString(R.string.no_csv_data)
                 } else {
                     coroutineScope.launch {
-                        readMessage.value = "Loading CSV..."
+                        readMessage.value = context.resources.getString(R.string.loading_csv)
                         isReading.value = true
                         storageRepository.saveDoseList(doseList)
-                        readMessage.value = "CSV loaded"
+                        readMessage.value = context.resources.getString(R.string.csv_loaded)
                         isReading.value = false
                     }
                 }
