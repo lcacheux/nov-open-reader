@@ -1,5 +1,6 @@
 package net.cacheux.nvp.app
 
+import io.github.vinceglb.filekit.core.PlatformFile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -8,12 +9,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
+import net.cacheux.nvp.app.utils.csvToDoseList
 import net.cacheux.nvp.logging.logDebug
 import net.cacheux.nvp.model.Dose
 import net.cacheux.nvp.model.DoseGroup
 import net.cacheux.nvplib.NvpController
 import net.cacheux.nvplib.testing.TestingDataReader
-import java.io.InputStream
+import java.nio.charset.Charset
 
 class MainScreenViewModel(
     private val repository: PenInfoRepository,
@@ -22,6 +24,17 @@ class MainScreenViewModel(
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 ) {
     fun getPenList() = storageRepository.getPenList()
+
+    private val isReading = MutableStateFlow(false)
+    fun isReading(): StateFlow<Boolean> = isReading
+
+    private val readMessage = MutableStateFlow<String?>(null)
+    fun getReadMessage(): StateFlow<String?> = readMessage
+
+    fun clearPopup() {
+        isReading.value = false
+        readMessage.value = null
+    }
 
     private val currentPen = MutableStateFlow<String?>(null)
     fun getCurrentPen(): StateFlow<String?> = currentPen
@@ -43,13 +56,32 @@ class MainScreenViewModel(
 
     val store = repository.getDataStore()
 
-    fun loadFromFile(inputStream: InputStream) {
-        logDebug { "loadFromFile" }
-
-        val dataReader = TestingDataReader(inputStream)
-        val result = NvpController(dataReader).dataRead()
+    fun loadCsvFile(file: PlatformFile) {
         coroutineScope.launch {
+            file.readBytes().toString(Charset.defaultCharset()).csvToDoseList().let { doseList ->
+                if (doseList.isEmpty()) {
+                    readMessage.value = "No data found in CSV file"
+                } else {
+                    readMessage.value = "Loading CSV..."
+                    isReading.value = true
+                    storageRepository.saveDoseList(doseList)
+                    readMessage.value = "CSV loaded"
+                    isReading.value = false
+                }
+            }
+        }
+    }
+
+    fun loadFromFile(file: PlatformFile) {
+        coroutineScope.launch {
+            logDebug { "loadFromFile" }
+
+            val dataReader = TestingDataReader(file.readBytes().inputStream())
+            val result = NvpController(dataReader).dataRead()
+
+            isReading.value = true
             storageRepository.saveResult(result)
+            isReading.value = false
         }
     }
 }

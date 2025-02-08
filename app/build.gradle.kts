@@ -43,6 +43,7 @@ kotlin {
                 implementation(libs.hilt.android.testing)
                 implementation(libs.mockito.android)
                 implementation(libs.mockito.kotlin)
+                implementation(libs.turbine)
                 implementation(compose.desktop.uiTestJUnit4)
                 configurations["ksp"].dependencies.add(project.dependencies.create(libs.hilt.android.compiler.get()))
             }

@@ -17,5 +17,5 @@ fun mockPreferencesRepository(
     on { this.autoIgnoreValue }.thenReturn(stateFlowWrapper(autoIgnoreValue))
 }
 
-fun genDoses(start: Date, delay: Int, vararg values: Int): List<Dose> =
-    values.mapIndexed { index, i -> Dose(start.time + delay * index, i) }
+fun genDoses(start: Date, delay: Int, vararg values: Int, serial: String = ""): List<Dose> =
+    values.mapIndexed { index, i -> Dose(start.time + delay * index, i, serial = serial) }

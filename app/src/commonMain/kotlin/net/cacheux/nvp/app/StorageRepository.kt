@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import net.cacheux.nvp.app.utils.penInfos
 import net.cacheux.nvp.model.Dose
+import net.cacheux.nvp.model.PenInfos
 import net.cacheux.nvplib.StopCondition
 import net.cacheux.nvplib.data.PenResult
 import net.cacheux.nvplib.stopAfterDelay
@@ -14,7 +15,7 @@ class StorageRepository(
 ): StopConditionProvider {
     fun getPenList() = storage.listAllPens()
 
-    fun getDoseList(serial: String?): Flow<List<Dose>> = storage.getAllDoses(serial)
+    fun getDoseList(serial: String? = null): Flow<List<Dose>> = storage.getAllDoses(serial)
 
     override suspend fun getStopCondition(): StopCondition {
         val currentTime = System.currentTimeMillis()
@@ -26,6 +27,21 @@ class StorageRepository(
         return stopAfterDelay(
             *stopMap.toTypedArray()
         )
+    }
+
+    suspend fun saveDoseList(list: List<Dose>) {
+        /**
+         * A CSV export can have multiple time the same dose (if they all happened within the same
+         * second), but we still want to ignore imported doses that are already in the database.
+         * Because of this, we filter the list by removing any dose already in the database prior to
+         * adding them.
+         */
+        val existing = storage.getAllDoses().first()
+        list.filter { dose ->
+            !existing.any { dose.compareValues(it) }
+        }.forEach {
+            storage.addDose(it, PenInfos(model = "", serial = it.serial))
+        }
     }
 
     suspend fun saveResult(result: PenResult) {
