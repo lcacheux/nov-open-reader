@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Nov Open Reader</string>
     <string name="reading_pen">Reading pen</string>
+    <string name="loading_csv">Loading CSV…</string>
+    <string name="csv_loaded">CSV loaded</string>
+    <string name="no_csv_data">No data found in CSV file</string>
 </resources>
