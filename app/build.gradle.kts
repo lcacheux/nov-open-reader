@@ -32,6 +32,7 @@ kotlin {
 
             implementation(libs.androidx.datastore.core)
             implementation(libs.androidx.datastore.preferences)
+            implementation(libs.commons.math3)
 
             configurations["kspAndroid"].dependencies.add(project.dependencies.create(libs.hilt.android.compiler.get()))
         }
@@ -74,6 +75,7 @@ kotlin {
             implementation(libs.androidx.room.common)
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.sqlite.bundled)
+            implementation(libs.commons.math3)
         }
 
         val desktopMain by getting {

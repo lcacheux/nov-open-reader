@@ -10,6 +10,8 @@
     <string name="export_csv">Exporter au format CSV</string>
     <string name="import_csv">Importer un fichier CSV</string>
     <string name="back_button">Bouton retour</string>
+    <string name="insulin_on_board">Insuline à bord :</string>
+    <string name="active_insulin">Active :</string>
 
     <string name="ok">OK</string>
     <string name="cancel">Annuler</string>
@@ -24,4 +26,10 @@
     <string name="auto_ignore_details">Les valeurs en dessous de la valeur spécifiée ne seront pas comptées</string>
     <string name="auto_ignore_value">En dessous de</string>
     <string name="auto_ignore_value_suffix"> unités</string>
+
+    <string name="group_iob">Insuline à bord</string>
+    <string name="group_iob_details">Afficher l'insuline active</string>
+    <string name="group_iob_insulin_peak">Période de pic d'insuline (min)</string>
+    <string name="group_iob_delta">Période de calcul de l'insuline active (min)</string>
+    <string name="group_iob_insulin_duration">Durée de l'insuline (heures)</string>
 </resources>

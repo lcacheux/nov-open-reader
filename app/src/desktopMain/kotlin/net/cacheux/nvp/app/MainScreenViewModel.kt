@@ -4,23 +4,28 @@ import io.github.vinceglb.filekit.core.PlatformFile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import net.cacheux.nvp.app.utils.csvToDoseList
 import net.cacheux.nvp.logging.logDebug
 import net.cacheux.nvp.model.Dose
 import net.cacheux.nvp.model.DoseGroup
+import net.cacheux.nvp.model.IoB
 import net.cacheux.nvplib.NvpController
 import net.cacheux.nvplib.testing.TestingDataReader
 import java.nio.charset.Charset
+import java.util.concurrent.TimeUnit
 
 class MainScreenViewModel(
     private val repository: PenInfoRepository,
     private val storageRepository: StorageRepository,
     private val doseListUseCase: DoseListUseCase,
+    private val iobUseCase: IoBUseCase,
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 ) {
     fun getPenList() = storageRepository.getPenList()
@@ -53,6 +58,13 @@ class MainScreenViewModel(
     val flatDoseList: Flow<List<Dose>> = currentPen.flatMapLatest {
         storageRepository.getDoseList(it)
     }
+
+    val iob: Flow<IoB?> = iobUseCase.calculate(doseList, flow {
+        while(true) {
+            emit(System.currentTimeMillis())
+            delay(TimeUnit.MINUTES.toMillis(1))
+        }
+    })
 
     val store = repository.getDataStore()
 
