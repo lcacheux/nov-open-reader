@@ -48,8 +48,11 @@ class StorageRepository(
         if (result is PenResult.Success) {
             val lastTime = storage.getLastDose(result.data.serial).first()?.time ?: 0L
             result.data.doseList.forEach { dose ->
-                if (dose.time > lastTime)
+                // The same dose can be read with different ms.
+                // Rare chance to have both doses in less than the same second.
+                if ((dose.time - lastTime) > 1000) {
                     storage.addDose(Dose(dose.time, dose.units), result.data.penInfos())
+                }
             }
         }
     }
