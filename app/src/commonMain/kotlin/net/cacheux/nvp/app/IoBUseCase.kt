@@ -41,37 +41,35 @@ class IoBUseCase(
 
             val nextTime = time + delta
 
-            val remaining = InsulinUnit(
+            val remaining =
                 doseGroups
                     .sortedByDescending { it.getTime() }
                     .takeWhile { time - it.getTime() <= insulinDuration }
-                    .sumOf {
+                    .map {
                         (it.getTotal() * this.fraction(
                             time,
                             it.getTime(),
                             insulinPeak
                         )).toInt()
                     }
-            )
 
-            val next = InsulinUnit(
+            val next =
                 doseGroups
                     .sortedByDescending { it.getTime() }
                     .takeWhile { nextTime - it.getTime() <= insulinDuration }
-                    .sumOf {
-                        (it.getTotal() * this.fraction(
-                            nextTime,
+                    .map {
+                        (it.getTotal() * (this.fraction(
+                            time,
                             it.getTime(),
                             insulinPeak
-                        )).toInt()
+                        ) - this.fraction(nextTime, it.getTime(), insulinPeak))).toInt()
                     }
-            )
 
             IoB(
                 time = time,
-                remaining = remaining,
+                remaining = InsulinUnit(remaining.sum()),
                 serial = doseGroups.lastOrNull()?.getSerial() ?: "",
-                current = remaining - next,
+                current = InsulinUnit(next.sum()),
                 delta = delta
             )
         }
