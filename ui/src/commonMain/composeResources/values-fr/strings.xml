@@ -32,4 +32,8 @@
     <string name="group_iob_insulin_peak">Période de pic d'insuline (min)</string>
     <string name="group_iob_delta">Période de calcul de l'insuline active (min)</string>
     <string name="group_iob_insulin_duration">Durée de l'insuline (heures)</string>
+
+    <string name="minutes_suffix"> minutes</string>
+    <string name="hours_suffix"> heures</string>
+
 </resources>
