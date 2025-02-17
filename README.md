@@ -39,3 +39,7 @@ This application is intended for informational purposes only and should not be u
 for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician
 or other qualified health provider with any questions you may have regarding the use of insulin pens
 or any other medical condition.
+
+[<img src="https://f-droid.org/badge/get-it-on.png"
+    alt="Get it on F-Droid"
+    height="80">](https://f-droid.org/packages/net.cacheux.nvp.app)
