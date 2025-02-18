@@ -29,6 +29,9 @@ class StorageRepository(
         )
     }
 
+    /**
+     * Save a list of doses from a CSV import.
+     */
     suspend fun saveDoseList(list: List<Dose>) {
         /**
          * A CSV export can have multiple time the same dose (if they all happened within the same
@@ -44,9 +47,13 @@ class StorageRepository(
         }
     }
 
+    /**
+     * Save a list of doses from a scan.
+     */
     suspend fun saveResult(result: PenResult) {
         if (result is PenResult.Success) {
-            val lastTime = storage.getLastDose(result.data.serial).first()?.time ?: 0L
+            // Add one second to avoid duplicates in some cases
+            val lastTime = storage.getLastDose(result.data.serial).first()?.time?.let { it + 1000 } ?: 0L
             result.data.doseList.forEach { dose ->
                 if (dose.time > lastTime)
                     storage.addDose(Dose(dose.time, dose.units), result.data.penInfos())
