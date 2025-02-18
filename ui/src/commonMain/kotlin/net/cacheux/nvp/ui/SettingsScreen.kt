@@ -24,6 +24,13 @@ import net.cacheux.nvp.ui.ui.generated.resources.group_delay
 import net.cacheux.nvp.ui.ui.generated.resources.group_delay_suffix
 import net.cacheux.nvp.ui.ui.generated.resources.group_doses
 import net.cacheux.nvp.ui.ui.generated.resources.group_doses_details
+import net.cacheux.nvp.ui.ui.generated.resources.group_iob
+import net.cacheux.nvp.ui.ui.generated.resources.group_iob_delta
+import net.cacheux.nvp.ui.ui.generated.resources.group_iob_details
+import net.cacheux.nvp.ui.ui.generated.resources.group_iob_insulin_duration
+import net.cacheux.nvp.ui.ui.generated.resources.group_iob_insulin_peak
+import net.cacheux.nvp.ui.ui.generated.resources.hours_suffix
+import net.cacheux.nvp.ui.ui.generated.resources.minutes_suffix
 import net.cacheux.nvp.ui.ui.generated.resources.settings
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -43,6 +50,12 @@ data class SettingsScreenParams(
     val groupDelay: StateWrapper<Int> = stateWrapper(60),
     val autoIgnoreEnabled: StateWrapper<Boolean> = stateWrapper(true),
     val autoIgnoreValue: StateWrapper<Int> = stateWrapper(2),
+
+    val groupIoB: StateWrapper<Boolean> = stateWrapper(false),
+    val insulinPeak: StateWrapper<Int> = stateWrapper(75),
+    val delta: StateWrapper<Int> = stateWrapper(15),
+    val insulinDuration: StateWrapper<Int> = stateWrapper(5)
+
 )
 
 @Composable
@@ -95,6 +108,37 @@ fun SettingsScreen(
                     testTag = "autoIgnoreValuePref"
                 )
             }
+        }
+
+        ExpandableSwitch(
+            label = stringResource(Res.string.group_iob),
+            subLabel = stringResource(Res.string.group_iob_details),
+            state = params.groupIoB,
+            testTag = "groupIobSwitch"
+        ) {
+            PrefDivider()
+            IntPreference(
+                label = stringResource(Res.string.group_iob_insulin_peak),
+                value = params.insulinPeak,
+                suffix = stringResource(Res.string.minutes_suffix),
+                testTag = "iobInsulinPeakPref"
+            )
+
+            PrefDivider()
+            IntPreference(
+                label = stringResource(Res.string.group_iob_delta),
+                value = params.delta,
+                suffix = stringResource(Res.string.minutes_suffix),
+                testTag = "iobDeltaPref"
+            )
+
+            PrefDivider()
+            IntPreference(
+                label = stringResource(Res.string.group_iob_insulin_duration),
+                value = params.insulinDuration,
+                suffix = stringResource(Res.string.hours_suffix),
+                testTag = "iobInsulinDurationPref"
+            )
         }
     }
 }

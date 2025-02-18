@@ -57,11 +57,16 @@ class MainActivity : ComponentActivity() {
                                 groupDelay = settingsViewModel.groupDelay.asStateWrapper(),
                                 autoIgnoreEnabled = settingsViewModel.autoIgnoreEnabled.asStateWrapper(),
                                 autoIgnoreValue = settingsViewModel.autoIgnoreValue.asStateWrapper(),
+                                groupIoB = settingsViewModel.groupIoB.asStateWrapper(),
+                                insulinPeak = settingsViewModel.insulinPeak.asStateWrapper(),
+                                delta = settingsViewModel.delta.asStateWrapper(),
+                                insulinDuration = settingsViewModel.insulinDuration.asStateWrapper()
                             )
                         )
                     } else {
                         MainScreen(
                             doseList = viewModel.doseList.collectAsState(listOf()).value.reversed(),
+                            iob = viewModel.iob.collectAsState(null).value,
                             message = viewModel.getReadMessage().collectAsState().value,
 
                             loading = viewModel.isReading().collectAsState().value,

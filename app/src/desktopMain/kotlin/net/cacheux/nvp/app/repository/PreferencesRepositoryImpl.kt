@@ -20,6 +20,11 @@ class PreferencesRepositoryImpl: PreferencesRepository {
     override val autoIgnoreEnabled = booleanStateFlowWrapper("autoIgnoreEnabled", "true")
     override val autoIgnoreValue = intStateFlowWrapper("autoIgnoreValue", "2")
 
+    override val groupIoB = booleanStateFlowWrapper("groupIoB", "false")
+    override val insulinPeak = intStateFlowWrapper("insulinPeak", "75")
+    override val delta = intStateFlowWrapper("delta", "15")
+    override val insulinDuration = intStateFlowWrapper("insulinDuration", "5")
+
     private fun saveProperties() {
         propertiesFile.outputStream().use { properties.store(it, null) }
     }

@@ -15,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import net.cacheux.nvp.app.DoseListUseCase
+import net.cacheux.nvp.app.IoBUseCase
 import net.cacheux.nvp.app.MainScreenViewModel
 import net.cacheux.nvp.app.SettingsViewModel
 import net.cacheux.nvp.app.StorageRepository
@@ -42,7 +43,8 @@ val preferencesRepository = PreferencesRepositoryImpl()
 val mainScreenViewModel = MainScreenViewModel(
     TestPenInfoRepository(),
     doseListUseCase = DoseListUseCase(storageRepository, preferencesRepository),
-    storageRepository = storageRepository
+    storageRepository = storageRepository,
+    iobUseCase = IoBUseCase(preferencesRepository)
 )
 
 val settingsViewModel = SettingsViewModel(preferencesRepository)
@@ -93,6 +95,8 @@ fun main() = application {
         } else {
             MainScreen(
                 doseList = mainScreenViewModel.doseList.collectAsState(listOf()).value.reversed(),
+                iob = mainScreenViewModel.iob.collectAsState(null).value,
+
                 loadingFileAvailable = true,
 
                 loading = mainScreenViewModel.isReading().collectAsState().value,

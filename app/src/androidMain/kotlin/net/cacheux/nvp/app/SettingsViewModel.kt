@@ -12,4 +12,9 @@ class SettingsViewModel @Inject constructor(
     val groupDelay = preferencesRepository.groupDelay
     val autoIgnoreEnabled = preferencesRepository.autoIgnoreEnabled
     val autoIgnoreValue = preferencesRepository.autoIgnoreValue
+
+    val groupIoB = preferencesRepository.groupIoB
+    val insulinPeak = preferencesRepository.insulinPeak
+    val delta = preferencesRepository.delta
+    val insulinDuration = preferencesRepository.insulinDuration
 }
