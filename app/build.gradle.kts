@@ -106,8 +106,8 @@ android {
         applicationId = "net.cacheux.nvp.app"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.compileSdk.get().toInt()
-        versionCode = 10102
-        versionName = "1.1.2"
+        versionCode = 10103
+        versionName = "1.1.3"
 
         testInstrumentationRunner = "net.cacheux.nvp.app.CustomTestRunner"
         vectorDrawables {
