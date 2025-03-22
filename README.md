@@ -13,7 +13,7 @@ Communication with the pen is done using a small library that can be used in oth
 Two components are used :
 - *nvplib-core*: contains the data structure and the protocol implementation to send requests and read
   results. This library is plain JVM Kotlin and doesn't require any dependency.
-- *nvplib-nfc*: A wrapper for the core library that add support for Android NFC API.
+- *nvplib-nfc*: A wrapper for the core library that adds support for Android NFC API.
 
 The library is available on Maven Central. To import it, use the following dependencies :
 ```kotlin
