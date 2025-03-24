@@ -8,7 +8,7 @@ data class Dose(
 ): DatedItem {
     fun ignored() = Dose(time, value, true, serial)
 
-    fun displayedValue() = String.format("%.1f", value.toFloat() / 10)
+    fun displayedValue() = String.format("%.1f", InsulinUnit(value).toFloat())
 
     /**
      * Compare with another without the ignored field

@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 import net.cacheux.nvp.model.Dose
 import net.cacheux.nvp.model.DoseGroup
+import net.cacheux.nvp.model.IoB
 import net.cacheux.nvp.ui.ui.generated.resources.Res
 import net.cacheux.nvp.ui.ui.generated.resources.app_name
 import net.cacheux.nvp.ui.ui.generated.resources.open_drawer
@@ -54,6 +55,7 @@ import java.util.GregorianCalendar
 @Composable
 fun MainScreen(
     doseList: List<DoseGroup>,
+    iob: IoB? = null,
     message: String? = null,
 
     loading: Boolean = false,
@@ -127,23 +129,31 @@ fun MainScreen(
             sheetPeekHeight = 0.dp
         ) {
             Column {
-                DoseList(
-                    doseList,
-                    currentDoseGroup = currentDoseGroup.value,
-                    onDoseClick = {
-                        scope.launch {
-                            if (currentDoseGroup.value == it) {
-                                currentDoseGroup.value = null
-                                scaffoldState.bottomSheetState.hide()
-                            } else {
-                                currentDoseGroup.value = null
-                                scaffoldState.bottomSheetState.hide()
-                                currentDoseGroup.value = it
-                                scaffoldState.bottomSheetState.expand()
+                iob?.let {
+                    InsulinOnBoard(
+                        iob = iob,
+                    )
+                }
+
+                Column {
+                    DoseList(
+                        doseList,
+                        currentDoseGroup = currentDoseGroup.value,
+                        onDoseClick = {
+                            scope.launch {
+                                if (currentDoseGroup.value == it) {
+                                    currentDoseGroup.value = null
+                                    scaffoldState.bottomSheetState.hide()
+                                } else {
+                                    currentDoseGroup.value = null
+                                    scaffoldState.bottomSheetState.hide()
+                                    currentDoseGroup.value = it
+                                    scaffoldState.bottomSheetState.expand()
+                                }
                             }
                         }
-                    }
-                )
+                    )
+                }
             }
         }
     }

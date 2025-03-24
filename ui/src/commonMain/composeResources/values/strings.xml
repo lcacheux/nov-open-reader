@@ -10,6 +10,8 @@
     <string name="export_csv">Export to CSV file</string>
     <string name="import_csv">Import from CSV file</string>
     <string name="back_button">Back button</string>
+    <string name="insulin_on_board">Insulin On Board:</string>
+    <string name="active_insulin">Active:</string>
 
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
@@ -24,4 +26,14 @@
     <string name="auto_ignore_details">Values below specified limit doesn't count for total</string>
     <string name="auto_ignore_value">Below</string>
     <string name="auto_ignore_value_suffix"> units</string>
+
+    <string name="group_iob">Insulin on Board</string>
+    <string name="group_iob_details">Display active insulin</string>
+    <string name="group_iob_insulin_peak">Insulin peak period</string>
+    <string name="group_iob_delta">Period for calculating active insulin</string>
+    <string name="group_iob_insulin_duration">Insulin duration period</string>
+
+    <string name="minutes_suffix"> minutes</string>
+    <string name="hours_suffix"> hours</string>
+
 </resources>

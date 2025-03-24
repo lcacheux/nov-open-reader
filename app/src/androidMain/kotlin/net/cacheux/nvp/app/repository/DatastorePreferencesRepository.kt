@@ -18,6 +18,10 @@ class DatastorePreferencesRepository(context: Context): PreferencesRepository {
         val GROUP_DELAY = intPreferencesKey("group_delay")
         val AUTO_IGNORE_ENABLED = booleanPreferencesKey("auto_ignore_enabled")
         val AUTO_IGNORE_VALUE = intPreferencesKey("auto_ignore_value")
+        val GROUP_IOB = booleanPreferencesKey("group_iob")
+        val IOB_INSULIN_PEAK = intPreferencesKey("iob_insulin_peak")
+        val IOB_DELTA = intPreferencesKey("iob_delta")
+        val IOB_INSULIN_DURATION = intPreferencesKey("iob_insulin_duration")
     }
 
     override val groupEnabled: StateFlowWrapper<Boolean> =
@@ -39,4 +43,20 @@ class DatastorePreferencesRepository(context: Context): PreferencesRepository {
         PreferenceStateFlowWrapper(
             dataStore, PreferencesKeys.AUTO_IGNORE_VALUE, 2
         )
+
+    override val groupIoB: StateFlowWrapper<Boolean> = PreferenceStateFlowWrapper(
+        dataStore, PreferencesKeys.GROUP_IOB, false
+    )
+
+    override val insulinPeak: StateFlowWrapper<Int> = PreferenceStateFlowWrapper(
+        dataStore, PreferencesKeys.IOB_INSULIN_PEAK, 75
+    )
+
+    override val delta: StateFlowWrapper<Int> = PreferenceStateFlowWrapper(
+        dataStore, PreferencesKeys.IOB_DELTA, 15
+    )
+
+    override val insulinDuration: StateFlowWrapper<Int> = PreferenceStateFlowWrapper(
+        dataStore, PreferencesKeys.IOB_INSULIN_DURATION, 5
+    )
 }
