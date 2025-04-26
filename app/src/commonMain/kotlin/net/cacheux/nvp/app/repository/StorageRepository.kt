@@ -1,4 +1,4 @@
-package net.cacheux.nvp.app
+package net.cacheux.nvp.app.repository
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -16,6 +16,10 @@ class StorageRepository(
     fun getPenList() = storage.listAllPens()
 
     fun getDoseList(serial: String? = null): Flow<List<Dose>> = storage.getAllDoses(serial)
+
+    suspend fun updatePen(penInfos: PenInfos) {
+        storage.updatePen(penInfos)
+    }
 
     override suspend fun getStopCondition(): StopCondition {
         val currentTime = System.currentTimeMillis()

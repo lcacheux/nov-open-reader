@@ -13,6 +13,13 @@
 
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="reset">Reset</string>
+    <string name="clear">Clear</string>
+
+    <!-- Pen settings screen -->
+    <string name="pen_name">Name</string>
+    <string name="pen_color">Color</string>
+    <string name="select_color">Select color</string>
 
     <!-- Settings screen -->
     <string name="settings">Settings</string>
@@ -24,4 +31,14 @@
     <string name="auto_ignore_details">Values below specified limit doesn't count for total</string>
     <string name="auto_ignore_value">Below</string>
     <string name="auto_ignore_value_suffix"> units</string>
+
+    <!-- Popup messages -->
+    <string name="reading_pen">Reading pen</string>
+    <string name="reading_pen_error">Read error</string>
+    <string name="loading_csv">Loading CSV…</string>
+    <string name="csv_loaded">CSV loaded</string>
+    <string name="no_csv_data">No data found in CSV file</string>
+
+    <!-- Pen settings screen -->
+    <string name="pen_settings">Pen settings</string>
 </resources>

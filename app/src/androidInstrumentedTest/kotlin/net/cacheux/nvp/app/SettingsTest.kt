@@ -16,15 +16,11 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import jakarta.inject.Inject
 import kotlinx.coroutines.runBlocking
-import net.cacheux.nvp.model.Dose
-import net.cacheux.nvp.model.PenInfos
-import net.cacheux.nvp.ui.testDateTime
 import net.cacheux.nvp.ui.ui.generated.resources.Res
 import net.cacheux.nvp.ui.ui.generated.resources.auto_ignore
 import net.cacheux.nvp.ui.ui.generated.resources.auto_ignore_details
 import net.cacheux.nvp.ui.ui.generated.resources.auto_ignore_value
 import net.cacheux.nvp.ui.ui.generated.resources.auto_ignore_value_suffix
-import net.cacheux.nvp.ui.ui.generated.resources.back_button
 import net.cacheux.nvp.ui.ui.generated.resources.cancel
 import net.cacheux.nvp.ui.ui.generated.resources.group_delay
 import net.cacheux.nvp.ui.ui.generated.resources.group_delay_suffix
@@ -41,7 +37,7 @@ import org.junit.runner.RunWith
 @HiltAndroidTest
 @UninstallModules(NvpModule::class)
 @RunWith(AndroidJUnit4::class)
-class ChangeSettingsTest {
+class SettingsTest {
 
     @Inject
     lateinit var doseStorage: DoseStorage
@@ -55,30 +51,7 @@ class ChangeSettingsTest {
     @Before
     fun init() {
         hiltRule.inject()
-
-        val pen1 = PenInfos(
-            serial = "ABCD1234",
-            model = "NovoPen 6"
-        )
-
-        val pen2 = PenInfos(
-            serial = "ABCD568",
-            model = "NovoPen 6"
-        )
-
-        runBlocking {
-            doseStorage.addDose(testDose(1, 12, 0, 0, 20), pen1)
-            doseStorage.addDose(testDose(1, 12, 0, 10, 40), pen1)
-            doseStorage.addDose(testDose(1, 12, 0, 20, 160), pen1)
-            doseStorage.addDose(testDose(1, 12, 0, 40, 160), pen1)
-
-            doseStorage.addDose(testDose(1, 12, 10, 0, 20), pen1)
-            doseStorage.addDose(testDose(1, 12, 10, 10, 60), pen1)
-            doseStorage.addDose(testDose(1, 12, 10, 20, 400), pen1)
-
-            doseStorage.addDose(testDose(1, 12, 10, 30, 20), pen2)
-            doseStorage.addDose(testDose(1, 12, 10, 40, 520), pen2)
-        }
+        doseStorage.insertData()
     }
 
     @Test
@@ -174,12 +147,6 @@ class ChangeSettingsTest {
         Unit
     }
 
-    private fun ComposeTestRule.assertHaveTexts(vararg values: String) {
-        values.forEach {
-            onNodeWithText(it).assertExists()
-        }
-    }
-
     private suspend fun ComposeTestRule.openSettings() {
         onNodeWithContentDescription(getString(Res.string.open_drawer)).performClick()
         waitForIdle()
@@ -187,14 +154,4 @@ class ChangeSettingsTest {
         onNodeWithText(getString(Res.string.settings)).performClick()
         waitForIdle()
     }
-
-    private suspend fun ComposeTestRule.closeSettings() {
-        onNodeWithContentDescription(getString(Res.string.back_button)).performClick()
-        waitForIdle()
-    }
-
-    private fun testDose(day: Int, hour: Int, minute: Int, second: Int, value: Int) = Dose(
-        time = testDateTime(hour, minute, second, date = day),
-        value = value
-    )
 }

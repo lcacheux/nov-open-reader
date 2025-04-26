@@ -21,7 +21,8 @@ data class PenWithDoses(
         Dose(
             time = it.time,
             value = it.value,
-            serial = roomPen.serial
+            serial = roomPen.serial,
+            color = roomPen.color
         )
     }
 }

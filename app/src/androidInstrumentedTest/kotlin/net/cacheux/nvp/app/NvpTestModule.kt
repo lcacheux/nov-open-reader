@@ -8,7 +8,12 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
 import kotlinx.coroutines.flow.MutableStateFlow
+import net.cacheux.nvp.app.repository.BasePenInfoRepository
 import net.cacheux.nvp.app.repository.DatastorePreferencesRepository
+import net.cacheux.nvp.app.repository.PenInfoRepository
+import net.cacheux.nvp.app.repository.PreferencesRepository
+import net.cacheux.nvp.app.repository.StopConditionProvider
+import net.cacheux.nvp.app.repository.StorageRepository
 import net.cacheux.nvplib.storage.DoseStorage
 import net.cacheux.nvplib.storage.room.NvpDatabase
 import net.cacheux.nvplib.storage.room.RoomDoseStorage

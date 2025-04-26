@@ -13,6 +13,13 @@
 
     <string name="ok">OK</string>
     <string name="cancel">Annuler</string>
+    <string name="reset">Réinitialiser</string>
+    <string name="clear">Supprimer</string>
+
+    <!-- Pen settings screen -->
+    <string name="pen_name">Nom</string>
+    <string name="pen_color">Couleur</string>
+    <string name="select_color">Choisir une couleur</string>
 
     <!-- Settings screen -->
     <string name="settings">Paramètres</string>
@@ -24,4 +31,14 @@
     <string name="auto_ignore_details">Les valeurs en dessous de la valeur spécifiée ne seront pas comptées</string>
     <string name="auto_ignore_value">En dessous de</string>
     <string name="auto_ignore_value_suffix"> unités</string>
+
+    <!-- Popup messages -->
+    <string name="reading_pen">Lecture du stylo</string>
+    <string name="reading_pen_error">Erreur de lecture</string>
+    <string name="loading_csv">Chargement du CSV…</string>
+    <string name="csv_loaded">CSV chargé</string>
+    <string name="no_csv_data">Pas de données dans le fichier CSV</string>
+
+    <!-- Pen settings screen -->
+    <string name="pen_settings">Paramètres des stylos</string>
 </resources>

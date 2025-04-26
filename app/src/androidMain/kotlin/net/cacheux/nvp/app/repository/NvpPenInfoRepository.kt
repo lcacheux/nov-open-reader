@@ -3,9 +3,6 @@ package net.cacheux.nvp.app.repository
 import android.app.Activity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
-import net.cacheux.nvp.app.BasePenInfoRepository
-import net.cacheux.nvp.app.PenInfoRepository
-import net.cacheux.nvp.app.StopConditionProvider
 import net.cacheux.nvp.logging.logDebug
 import net.cacheux.nvplib.data.PenResult
 import net.cacheux.nvplib.nfc.NfcController

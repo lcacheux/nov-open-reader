@@ -15,7 +15,7 @@ fun <T> StateFlowWrapper<T>.asStateWrapper()  = StateWrapper(
     setter = { this.set(it) }
 )
 
-fun <T> stateWrapper(initValue: T) = StateWrapper(
+fun <T> stateWrapper(initValue: T, setter: (T) -> Unit = {}) = StateWrapper(
     value = initValue,
-    setter = {}
+    setter = setter
 )

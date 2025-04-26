@@ -1,4 +1,5 @@
 [versions]
+java = "17"
 android-minSdk = "24"
 android-compileSdk = "34"
 agp = "8.8.0"
@@ -29,12 +30,16 @@ dokka = { id = "org.jetbrains.dokka", version = "2.0.0" }
 filekit-compose = { module = "io.github.vinceglb:filekit-compose", version = "0.8.2" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinx-serialization-core" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version = "1.7.0" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.9.3" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version = "androidx-datastore" }
 androidx-datastore-core = { module = "androidx.datastore:datastore-core", version.ref = "androidx-datastore" }
+androidx-lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version = "2.8.2" }
+
 # Room
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-room-common = { group = "androidx.room", name = "room-common", version.ref = "room" }
@@ -54,5 +59,3 @@ mockito = { group = "org.mockito", name = "mockito-core", version = "5.12.0" }
 mockito-android = { group = "org.mockito", name = "mockito-android", version = "5.12.0" }
 mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version = "5.4.0" }
 turbine = { group = "app.cash.turbine", name = "turbine", version = "1.2.0" }
-
-

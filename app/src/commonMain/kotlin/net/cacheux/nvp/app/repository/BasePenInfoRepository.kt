@@ -1,4 +1,4 @@
-package net.cacheux.nvp.app
+package net.cacheux.nvp.app.repository
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import net.cacheux.nvp.model.Dose

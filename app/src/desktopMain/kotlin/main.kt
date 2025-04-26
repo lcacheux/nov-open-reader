@@ -1,8 +1,3 @@
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.room.Room
@@ -14,19 +9,16 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import net.cacheux.nvp.app.DoseListUseCase
-import net.cacheux.nvp.app.MainScreenViewModel
-import net.cacheux.nvp.app.SettingsViewModel
-import net.cacheux.nvp.app.StorageRepository
-import net.cacheux.nvp.app.TestPenInfoRepository
 import net.cacheux.nvp.app.repository.PreferencesRepositoryImpl
+import net.cacheux.nvp.app.repository.StorageRepository
+import net.cacheux.nvp.app.repository.TestPenInfoRepository
+import net.cacheux.nvp.app.ui.ScreenWrapper
+import net.cacheux.nvp.app.usecase.DoseListUseCase
 import net.cacheux.nvp.app.utils.toCsv
+import net.cacheux.nvp.app.viewmodel.BasePenSettingsViewModel
+import net.cacheux.nvp.app.viewmodel.BaseSettingsViewModel
+import net.cacheux.nvp.app.viewmodel.MainScreenViewModel
 import net.cacheux.nvp.ui.MainDropdownMenuActions
-import net.cacheux.nvp.ui.MainScreen
-import net.cacheux.nvp.ui.SettingsScreen
-import net.cacheux.nvp.ui.SettingsScreenParams
-import net.cacheux.nvp.ui.SideMenuParams
-import net.cacheux.nvp.ui.asStateWrapper
 import net.cacheux.nvplib.storage.room.NvpDatabase
 import net.cacheux.nvplib.storage.room.RoomDoseStorage
 
@@ -45,7 +37,9 @@ val mainScreenViewModel = MainScreenViewModel(
     storageRepository = storageRepository
 )
 
-val settingsViewModel = SettingsViewModel(preferencesRepository)
+val settingsViewModel = BaseSettingsViewModel(preferencesRepository)
+
+val penSettingsViewModel = BasePenSettingsViewModel(storageRepository)
 
 val ioScope = CoroutineScope(Dispatchers.IO)
 
@@ -54,8 +48,6 @@ fun main() = application {
         onCloseRequest = ::exitApplication,
         title = "Nov Open Reader",
     ) {
-
-
         val loadRawDataPicker = rememberFilePickerLauncher(
             type = PickerType.File(),
             title = "Load file"
@@ -78,53 +70,26 @@ fun main() = application {
             // TODO feedback message
         }
 
-        var settingsOpened by remember { mutableStateOf(false) }
+        ScreenWrapper(
+            mainScreenViewModel = mainScreenViewModel,
+            penSettingsViewModel = penSettingsViewModel,
+            settingsViewModel = settingsViewModel,
 
-        if (settingsOpened) {
-            SettingsScreen(
-                params = SettingsScreenParams(
-                    onBack = { settingsOpened = false },
-                    groupDose = settingsViewModel.groupEnabled.asStateWrapper(),
-                    groupDelay = settingsViewModel.groupDelay.asStateWrapper(),
-                    autoIgnoreEnabled = settingsViewModel.autoIgnoreEnabled.asStateWrapper(),
-                    autoIgnoreValue = settingsViewModel.autoIgnoreValue.asStateWrapper(),
-                )
+            dropdownMenuActions = MainDropdownMenuActions(
+                onLoadingClick = { loadRawDataPicker.launch() },
+                onExportCsv = {
+                    ioScope.launch {
+                        saveCsvPicker.launch(
+                            baseName = mainScreenViewModel.getCurrentPen().value?.let {
+                                "nvp_export_$it"
+                            } ?: "nvp_export_all",
+                            extension = "csv",
+                            bytes = mainScreenViewModel.flatDoseList.first().toCsv().toByteArray()
+                        )
+                    }
+                },
+                onImportCsv = { loadCsvPicker.launch() }
             )
-        } else {
-            MainScreen(
-                doseList = mainScreenViewModel.doseList.collectAsState(listOf()).value.reversed(),
-                loadingFileAvailable = true,
-
-                loading = mainScreenViewModel.isReading().collectAsState().value,
-                message = mainScreenViewModel.getReadMessage().collectAsState().value,
-                onDismissMessage = { mainScreenViewModel.clearPopup() },
-
-                storeAvailable = mainScreenViewModel.store.collectAsState().value != null,
-
-                dropdownMenuActions = MainDropdownMenuActions(
-                    onLoadingClick = { loadRawDataPicker.launch() },
-                    onExportCsv = {
-                        ioScope.launch {
-                            saveCsvPicker.launch(
-                                baseName = mainScreenViewModel.getCurrentPen().value?.let {
-                                    "nvp_export_$it"
-                                } ?: "nvp_export_all",
-                                extension = "csv",
-                                bytes = mainScreenViewModel.flatDoseList.first().toCsv().toByteArray()
-                            )
-                        }
-                    },
-                    onImportCsv = { loadCsvPicker.launch() }
-                ),
-
-                sideMenuParams = SideMenuParams(
-                    penList = mainScreenViewModel.getPenList()
-                        .collectAsState(listOf()).value.map { it.serial },
-                    selectedPen = mainScreenViewModel.getCurrentPen().collectAsState().value,
-                    onItemClick = { mainScreenViewModel.setCurrentPen(it) },
-                    onSettingsClick = { settingsOpened = true }
-                )
-            )
-        }
+        )
     }
 }

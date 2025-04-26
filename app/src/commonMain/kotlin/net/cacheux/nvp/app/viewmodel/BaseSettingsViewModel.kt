@@ -1,8 +1,11 @@
-package net.cacheux.nvp.app
+package net.cacheux.nvp.app.viewmodel
 
-class SettingsViewModel(
+import androidx.lifecycle.ViewModel
+import net.cacheux.nvp.app.repository.PreferencesRepository
+
+open class BaseSettingsViewModel(
     preferencesRepository: PreferencesRepository
-) {
+): ViewModel() {
     val groupEnabled = preferencesRepository.groupEnabled
     val groupDelay = preferencesRepository.groupDelay
     val autoIgnoreEnabled = preferencesRepository.autoIgnoreEnabled

@@ -1,7 +1,9 @@
-package net.cacheux.nvp.app
+package net.cacheux.nvp.app.usecase
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import net.cacheux.nvp.app.repository.PreferencesRepository
+import net.cacheux.nvp.app.repository.StorageRepository
 import net.cacheux.nvp.model.DoseGroup
 import net.cacheux.nvp.model.DoseGroupConfig
 

@@ -4,9 +4,10 @@ data class Dose(
     val time: Long,
     val value: Int,
     val ignored: Boolean = false,
-    val serial: String = ""
+    val serial: String = "",
+    val color: String = ""
 ): DatedItem {
-    fun ignored() = Dose(time, value, true, serial)
+    fun ignored() = Dose(time, value, true, serial, color)
 
     fun displayedValue() = String.format("%.1f", value.toFloat() / 10)
 

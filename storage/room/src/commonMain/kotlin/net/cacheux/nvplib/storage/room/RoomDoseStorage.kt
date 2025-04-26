@@ -3,11 +3,13 @@ package net.cacheux.nvplib.storage.room
 import androidx.sqlite.SQLiteException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import net.cacheux.nvp.model.Dose
 import net.cacheux.nvp.model.PenInfos
 import net.cacheux.nvplib.storage.DoseStorage
 import net.cacheux.nvplib.storage.room.entities.RoomDose
+import net.cacheux.nvplib.storage.room.entities.RoomPen
 import net.cacheux.nvplib.storage.room.entities.toPenInfos
 import net.cacheux.nvplib.storage.room.entities.toRoomPen
 
@@ -50,6 +52,20 @@ class RoomDoseStorage(
 
     override suspend fun addPen(pen: PenInfos) {
         database.doseDao().insertPen(pen.toRoomPen())
+    }
+
+    override suspend fun updatePen(pen: PenInfos) {
+        database.doseDao().getPen(pen.serial).firstOrNull()?.let {
+            database.doseDao().updatePen(
+                RoomPen(
+                    id = it.id,
+                    serial = pen.serial,
+                    model = pen.model,
+                    name = pen.name,
+                    color = pen.color,
+                )
+            )
+        }
     }
 
     override fun listAllPens(): Flow<List<PenInfos>>

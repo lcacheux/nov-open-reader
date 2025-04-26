@@ -14,5 +14,7 @@ interface DoseStorage {
 
     suspend fun addPen(pen: PenInfos)
 
+    suspend fun updatePen(pen: PenInfos)
+
     fun listAllPens(): Flow<List<PenInfos>>
 }

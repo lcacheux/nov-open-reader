@@ -12,21 +12,18 @@ plugins {
 group = "net.cacheux.nvp.app"
 
 kotlin {
+    jvmToolchain(17)
+
     jvm("desktop")
 
-    androidTarget {
-        compilations.all {
-            kotlinOptions {
-                jvmTarget = "17"
-            }
-        }
-    }
+    androidTarget()
 
     sourceSets {
         androidMain.dependencies {
             implementation(project(":nvplib:nfc"))
 
             implementation(libs.androidx.activity.compose)
+            implementation(libs.kotlinx.coroutines.android)
 
             implementation(libs.hilt.android)
 
@@ -74,12 +71,14 @@ kotlin {
             implementation(libs.androidx.room.common)
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.sqlite.bundled)
+            implementation(libs.androidx.lifecycle.viewmodel.compose)
         }
 
         val desktopMain by getting {
             dependencies {
                 implementation(project(":nvplib:testing"))
                 implementation(compose.desktop.currentOs)
+                implementation(libs.kotlinx.coroutines.swing)
                 implementation(libs.filekit.compose)
             }
         }
@@ -135,10 +134,6 @@ android {
             )
             if (signingAvailable) signingConfig = signingConfigs.getByName("release")
         }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
     }
     buildFeatures {
         compose = true
