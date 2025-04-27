@@ -1,5 +1,6 @@
 package net.cacheux.nvp.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
@@ -27,6 +28,7 @@ fun ExpandableSwitch(
     Column {
         Row(
             modifier = Modifier.fillMaxWidth()
+                .clickable { state.setter(!state.value) }
         ) {
             Column(
                 modifier = Modifier
