@@ -1,6 +1,5 @@
 package net.cacheux.nvp.app.repository
 
-import net.cacheux.nvp.app.PreferencesRepository
 import net.cacheux.nvplib.utils.stateFlowWrapper
 import java.io.File
 import java.util.Properties

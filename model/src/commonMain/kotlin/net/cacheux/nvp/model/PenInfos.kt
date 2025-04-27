@@ -5,4 +5,6 @@ data class PenInfos(
     val serial: String,
     val name: String = "",
     val color: String = "",
-)
+) {
+    fun displayName() = name.ifEmpty { serial }
+}

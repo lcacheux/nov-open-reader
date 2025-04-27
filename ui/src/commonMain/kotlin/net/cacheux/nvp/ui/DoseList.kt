@@ -107,7 +107,7 @@ fun DoseListItem(
                 if (isCurrent)
                     MaterialTheme.colorScheme.surfaceVariant
                 else
-                    MaterialTheme.colorScheme.surface
+                    dose.doses.first().color.hexToColor().copy(alpha = 0.5f)
             )
             .fillMaxWidth()
             .clickable { onClick(dose) }

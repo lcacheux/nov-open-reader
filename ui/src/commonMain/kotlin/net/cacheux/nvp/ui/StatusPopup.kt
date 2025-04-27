@@ -19,6 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import net.cacheux.nvp.ui.ui.generated.resources.Res
+import net.cacheux.nvp.ui.ui.generated.resources.ok
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -49,7 +52,7 @@ fun StatusPopup(
                     Button(
                         onClick = onDismiss,
                     ) {
-                        Text(text = "OK")
+                        Text(text = stringResource(Res.string.ok))
                     }
                 }
             }

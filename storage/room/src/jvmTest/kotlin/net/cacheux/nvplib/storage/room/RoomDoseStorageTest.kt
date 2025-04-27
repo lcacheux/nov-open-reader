@@ -27,6 +27,46 @@ class RoomDoseStorageTest {
     }
 
     @Test
+    fun testUpdatePen() = runBlocking {
+        val storage = initStorage()
+
+        storage.addPen(PenInfos("Novopen 6", "ABCD1234"))
+        storage.addPen(PenInfos("Novopen 6", "EFGH5678"))
+
+        with(storage.listAllPens().first()) {
+            assertEquals(2, size)
+
+            assertEquals("ABCD1234", this[0].serial)
+            assertEquals("", this[0].name)
+            assertEquals("", this[0].color)
+
+            assertEquals("EFGH5678", this[1].serial)
+            assertEquals("", this[1].name)
+            assertEquals("", this[1].color)
+        }
+
+        storage.updatePen(PenInfos("Novopen 6", "ABCD1234", "First pen", "#eeeeee"))
+
+        with(storage.listAllPens().first()) {
+            assertEquals(2, size)
+
+            assertEquals("ABCD1234", this[0].serial)
+            assertEquals("First pen", this[0].name)
+            assertEquals("#eeeeee", this[0].color)
+        }
+
+        storage.updatePen(PenInfos("Novopen 6", "EFGH5678", "Second pen", "#dddddd"))
+
+        with(storage.listAllPens().first()) {
+            assertEquals(2, size)
+
+            assertEquals("EFGH5678", this[1].serial)
+            assertEquals("Second pen", this[1].name)
+            assertEquals("#dddddd", this[1].color)
+        }
+    }
+
+    @Test
     fun testAddDose() = runBlocking {
         val storage = initStorage().apply { createDataset() }
 

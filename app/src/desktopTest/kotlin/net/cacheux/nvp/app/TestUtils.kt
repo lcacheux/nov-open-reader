@@ -1,5 +1,6 @@
 package net.cacheux.nvp.app
 
+import net.cacheux.nvp.app.repository.PreferencesRepository
 import net.cacheux.nvp.model.Dose
 import net.cacheux.nvplib.utils.stateFlowWrapper
 import org.mockito.kotlin.mock

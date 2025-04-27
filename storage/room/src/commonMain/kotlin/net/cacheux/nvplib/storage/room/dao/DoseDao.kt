@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 import net.cacheux.nvplib.storage.room.entities.DoseWithPen
 import net.cacheux.nvplib.storage.room.entities.PenWithDoses
@@ -28,6 +29,9 @@ interface DoseDao {
 
     @Insert
     suspend fun insertPen(pen: RoomPen): Long
+
+    @Update
+    suspend fun updatePen(pen: RoomPen)
 
     @Query("SELECT * FROM pen")
     fun listAllPens(): Flow<List<RoomPen>>

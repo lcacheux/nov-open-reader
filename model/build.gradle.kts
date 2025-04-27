@@ -4,14 +4,10 @@ plugins {
 }
 
 kotlin {
+    jvmToolchain(17)
+
     jvm()
-    androidTarget {
-        compilations.all {
-            kotlinOptions {
-                jvmTarget = "17"
-            }
-        }
-    }
+    androidTarget()
 
     sourceSets {
         jvmTest.dependencies {
@@ -26,10 +22,5 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
     }
 }

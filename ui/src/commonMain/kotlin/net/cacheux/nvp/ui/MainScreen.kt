@@ -94,13 +94,14 @@ fun MainScreen(
         drawerContent = {
             SideMenu(
                 SideMenuParams(
-                    sideMenuParams.penList,
-                    sideMenuParams.selectedPen,
+                    penList = sideMenuParams.penList,
+                    selectedPen = sideMenuParams.selectedPen,
                     onItemClick = {
                         sideMenuParams.onItemClick(it)
                         scope.launch { drawerState.close() }
                     },
-                    sideMenuParams.onSettingsClick
+                    onPenSettingsClick = sideMenuParams.onPenSettingsClick,
+                    onSettingsClick = sideMenuParams.onSettingsClick
                 )
             )
         }

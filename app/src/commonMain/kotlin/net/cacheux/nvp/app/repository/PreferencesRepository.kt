@@ -1,4 +1,4 @@
-package net.cacheux.nvp.app
+package net.cacheux.nvp.app.repository
 
 import net.cacheux.nvplib.utils.StateFlowWrapper
 

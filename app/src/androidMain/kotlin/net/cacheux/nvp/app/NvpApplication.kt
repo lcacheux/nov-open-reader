@@ -10,6 +10,10 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import net.cacheux.nvp.app.repository.DatastorePreferencesRepository
 import net.cacheux.nvp.app.repository.NvpPenInfoRepository
+import net.cacheux.nvp.app.repository.PenInfoRepository
+import net.cacheux.nvp.app.repository.PreferencesRepository
+import net.cacheux.nvp.app.repository.StopConditionProvider
+import net.cacheux.nvp.app.repository.StorageRepository
 import net.cacheux.nvplib.storage.DoseStorage
 import net.cacheux.nvplib.storage.room.RoomDoseStorage
 import net.cacheux.nvplib.storage.room.databaseBuilder

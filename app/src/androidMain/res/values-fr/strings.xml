@@ -1,7 +1,3 @@
 <resources>
     <string name="app_name">Nov Open Reader</string>
-    <string name="reading_pen">Lecture du stylo</string>
-    <string name="loading_csv">Chargement du CSV…</string>
-    <string name="csv_loaded">CSV chargé</string>
-    <string name="no_csv_data">Pas de données dans le fichier CSV</string>
 </resources>

@@ -7,15 +7,10 @@ plugins {
 group = "net.cacheux.nvp.ui"
 
 kotlin {
-    jvm()
+    jvmToolchain(17)
 
-    androidTarget {
-        compilations.all {
-            kotlinOptions {
-                jvmTarget = "17"
-            }
-        }
-    }
+    jvm()
+    androidTarget()
 
     sourceSets {
         androidMain.dependencies {
@@ -31,6 +26,7 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+            implementation("com.github.skydoves:colorpicker-compose:1.1.2")
         }
 
         commonTest.dependencies {
@@ -70,10 +66,5 @@ android {
 
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
     }
 }

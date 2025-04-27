@@ -15,6 +15,7 @@ data class DoseWithPen(
     fun toDose() = Dose(
         time = dose.time,
         value = dose.value,
-        serial = pen.serial
+        serial = pen.serial,
+        color = pen.color
     )
 }

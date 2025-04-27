@@ -24,10 +24,9 @@ import net.cacheux.nvp.ui.ui.generated.resources.ok
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun IntPreference(
+fun StringPreference(
     label: String,
-    value: StateWrapper<Int>,
-    suffix: String = "",
+    value: StateWrapper<String>,
     testTag: String
 ) {
     var showDialog by remember { mutableStateOf(false) }
@@ -48,7 +47,7 @@ fun IntPreference(
                 style = MaterialTheme.typography.bodyLarge
             )
             Text(
-                text = "${value.value}$suffix",
+                text = value.value,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(top = 4.dp)
             )
@@ -56,7 +55,7 @@ fun IntPreference(
     }
 
     if (showDialog) {
-        IntInputDialog(
+        StringInputDialog(
             label = label,
             initialValue = value.value,
             onDismissRequest = { showDialog = false },
@@ -70,26 +69,27 @@ fun IntPreference(
 
 
 @Composable
-fun IntInputDialog(
+fun StringInputDialog(
     label: String,
-    initialValue: Int,
+    initialValue: String,
     onDismissRequest: () -> Unit,
-    onValueChange: (Int) -> Unit
+    onValueChange: (String) -> Unit
 ) {
-    var inputValue by remember { mutableStateOf(initialValue.toString()) }
+    var inputValue by remember { mutableStateOf(initialValue) }
 
     AlertDialog(
         onDismissRequest = onDismissRequest,
         title = { Text(text = label) },
         text = {
             TextField(
+                modifier = Modifier.testTag("prefTextInput"),
                 value = inputValue,
                 onValueChange = { inputValue = it }
             )
         },
         confirmButton = {
             TextButton(onClick = {
-                onValueChange(inputValue.toIntOrNull() ?: initialValue)
+                onValueChange(inputValue)
             }) {
                 Text(stringResource(Res.string.ok))
             }
