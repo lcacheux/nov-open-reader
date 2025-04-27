@@ -2,6 +2,7 @@ package net.cacheux.nvp.app.utils
 
 import net.cacheux.nvp.model.Dose
 import java.text.SimpleDateFormat
+import java.util.Date
 
 fun List<Dose>.toCsv(): String {
     val builder = StringBuilder("Serial;Timestamp;Time;Value\n")
@@ -36,4 +37,11 @@ fun String.csvLineToDose(): Dose {
             throw IllegalArgumentException("Incorrect CSV line: wrong number format")
         }
     }
+}
+
+fun csvFilename(serial: String?): String {
+    val date = SimpleDateFormat("YYYYMMDD_HHmm").format(Date(System.currentTimeMillis()))
+    return serial?.let {
+        "nvp_export_${it}_$date"
+    } ?: "nvp_export_all_$date"
 }
