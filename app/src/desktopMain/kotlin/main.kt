@@ -14,6 +14,7 @@ import net.cacheux.nvp.app.repository.StorageRepository
 import net.cacheux.nvp.app.repository.TestPenInfoRepository
 import net.cacheux.nvp.app.ui.ScreenWrapper
 import net.cacheux.nvp.app.usecase.DoseListUseCase
+import net.cacheux.nvp.app.utils.csvFilename
 import net.cacheux.nvp.app.utils.toCsv
 import net.cacheux.nvp.app.viewmodel.BasePenSettingsViewModel
 import net.cacheux.nvp.app.viewmodel.BaseSettingsViewModel
@@ -80,9 +81,7 @@ fun main() = application {
                 onExportCsv = {
                     ioScope.launch {
                         saveCsvPicker.launch(
-                            baseName = mainScreenViewModel.getCurrentPen().value?.let {
-                                "nvp_export_$it"
-                            } ?: "nvp_export_all",
+                            baseName = csvFilename(mainScreenViewModel.getCurrentPen().value),
                             extension = "csv",
                             bytes = mainScreenViewModel.flatDoseList.first().toCsv().toByteArray()
                         )

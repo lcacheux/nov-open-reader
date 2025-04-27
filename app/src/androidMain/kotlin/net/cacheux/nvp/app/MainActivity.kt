@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import net.cacheux.nvp.app.repository.ActivityRequirer
 import net.cacheux.nvp.app.repository.PenInfoRepository
 import net.cacheux.nvp.app.ui.ScreenWrapper
+import net.cacheux.nvp.app.utils.csvFilename
 import net.cacheux.nvp.app.utils.toCsv
 import net.cacheux.nvp.app.viewmodel.MainScreenViewModel
 import net.cacheux.nvp.app.viewmodel.PenSettingsViewModel
@@ -91,11 +92,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun saveCsvFile() {
-        saveCsvFile.launch(
-            mainScreenViewModel.getCurrentPen().value?.let {
-                "nvp_export_$it.csv"
-            } ?: "nvp_export_all.csv"
-        )
+        saveCsvFile.launch("${csvFilename(mainScreenViewModel.getCurrentPen().value)}.csv")
     }
 
     private fun loadCsvFile() {
