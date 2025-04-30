@@ -83,7 +83,7 @@ fun DoseListHeader(
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.secondaryContainer)
-            .padding(4.dp)
+            .padding(horizontal = 4.dp)
     ) {
         Text(
             text = headerDate.format(Date(date)),
@@ -114,7 +114,7 @@ fun DoseListItem(
     ) {
         Column(
             modifier = Modifier
-                .padding(4.dp)
+                .padding(horizontal = 4.dp)
         ) {
             Text(
                 fontSize = 14.sp,
