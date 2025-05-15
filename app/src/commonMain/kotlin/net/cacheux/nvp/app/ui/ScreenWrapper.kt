@@ -9,6 +9,7 @@ import androidx.compose.runtime.setValue
 import net.cacheux.nvp.app.viewmodel.BaseMainScreenViewModel
 import net.cacheux.nvp.app.viewmodel.BasePenSettingsViewModel
 import net.cacheux.nvp.app.viewmodel.BaseSettingsViewModel
+import net.cacheux.nvp.ui.BackHandlerWrapper
 import net.cacheux.nvp.ui.MainDropdownMenuActions
 import net.cacheux.nvp.ui.MainScreen
 import net.cacheux.nvp.ui.PenSettingsScreen
@@ -33,6 +34,12 @@ fun ScreenWrapper(
     dropdownMenuActions: MainDropdownMenuActions
 ) {
     var currentScreen by remember { mutableStateOf(CurrentScreen.Main) }
+
+    BackHandlerWrapper(enabled = currentScreen != CurrentScreen.Main) {
+        if (currentScreen != CurrentScreen.Main) {
+            currentScreen = CurrentScreen.Main
+        }
+    }
 
     when(currentScreen) {
         CurrentScreen.Main -> {

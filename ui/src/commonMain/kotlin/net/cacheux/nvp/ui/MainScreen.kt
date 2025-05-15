@@ -79,7 +79,15 @@ fun MainScreen(
         )
     )
 
+    BackHandlerWrapper(enabled = currentDoseGroup.value != null) {
+        scope.launch { scaffoldState.bottomSheetState.hide() }
+    }
+
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+
+    BackHandlerWrapper(enabled = drawerState.isOpen) {
+        scope.launch { drawerState.close() }
+    }
 
     message?.let {
         StatusPopup(
