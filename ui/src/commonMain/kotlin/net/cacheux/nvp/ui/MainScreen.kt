@@ -97,6 +97,10 @@ fun MainScreen(
         )
     }
 
+    BackHandlerWrapper(enabled = message != null) {
+        if (!loading) onDismissMessage()
+    }
+
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {

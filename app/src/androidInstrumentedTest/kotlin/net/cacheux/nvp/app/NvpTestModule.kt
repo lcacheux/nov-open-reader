@@ -7,8 +7,6 @@ import dagger.Provides
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
-import kotlinx.coroutines.flow.MutableStateFlow
-import net.cacheux.nvp.app.repository.BasePenInfoRepository
 import net.cacheux.nvp.app.repository.DatastorePreferencesRepository
 import net.cacheux.nvp.app.repository.PenInfoRepository
 import net.cacheux.nvp.app.repository.PreferencesRepository
@@ -28,12 +26,7 @@ class NvpTestModule {
     @Provides
     @Singleton
     fun providePenInfoRepository(): PenInfoRepository {
-        return object: BasePenInfoRepository() {
-            override fun getDataStore() = MutableStateFlow(null)
-            override fun registerCallbacks(callbacks: PenInfoRepository.Callbacks) {
-                // Ignore
-            }
-        }
+        return TestingPenInfoRepository()
     }
 
     @Provides
