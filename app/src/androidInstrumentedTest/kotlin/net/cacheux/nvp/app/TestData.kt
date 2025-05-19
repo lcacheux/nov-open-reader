@@ -3,7 +3,7 @@ package net.cacheux.nvp.app
 import kotlinx.coroutines.runBlocking
 import net.cacheux.nvp.model.Dose
 import net.cacheux.nvp.model.PenInfos
-import net.cacheux.nvp.ui.testDateTime
+import net.cacheux.nvp.model.testDateTime
 import net.cacheux.nvplib.storage.DoseStorage
 
 fun DoseStorage.insertData() {

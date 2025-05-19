@@ -112,6 +112,22 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        buildConfigField("boolean", "DEMO_VERSION", "false")
+    }
+
+    flavorDimensions += "version"
+
+    productFlavors {
+        create("default") {
+            dimension = "version"
+        }
+
+        create("demo") {
+            dimension = "version"
+            applicationIdSuffix = ".demo"
+            buildConfigField("boolean", "DEMO_VERSION", "true")
+        }
     }
 
     if (signingAvailable) {
@@ -137,6 +153,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()

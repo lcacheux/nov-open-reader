@@ -11,6 +11,7 @@ import net.cacheux.nvp.app.viewmodel.BasePenSettingsViewModel
 import net.cacheux.nvp.app.viewmodel.BaseSettingsViewModel
 import net.cacheux.nvp.ui.BackHandlerWrapper
 import net.cacheux.nvp.ui.MainDropdownMenuActions
+import net.cacheux.nvp.ui.MainDropdownMenuParams
 import net.cacheux.nvp.ui.MainScreen
 import net.cacheux.nvp.ui.PenSettingsScreen
 import net.cacheux.nvp.ui.PenSettingsScreenParams
@@ -31,7 +32,8 @@ fun ScreenWrapper(
     mainScreenViewModel: BaseMainScreenViewModel,
     penSettingsViewModel: BasePenSettingsViewModel,
     settingsViewModel: BaseSettingsViewModel,
-    dropdownMenuActions: MainDropdownMenuActions
+    dropdownMenuActions: MainDropdownMenuActions,
+    demoVersion: Boolean = false
 ) {
     var currentScreen by remember { mutableStateOf(CurrentScreen.Main) }
 
@@ -45,15 +47,17 @@ fun ScreenWrapper(
         CurrentScreen.Main -> {
             MainScreen(
                 doseList = mainScreenViewModel.doseList.collectAsState(listOf()).value.reversed(),
-                loadingFileAvailable = true,
-
                 loading = mainScreenViewModel.isReading().collectAsState().value,
                 message = mainScreenViewModel.getReadMessage().collectAsState().value?.let {
                     stringResource(it)
                 },
                 onDismissMessage = { mainScreenViewModel.clearPopup() },
 
-                storeAvailable = mainScreenViewModel.store.collectAsState().value != null,
+                dropdownMenuParams = MainDropdownMenuParams(
+                    loadingFileAvailable = true,
+                    storeAvailable = mainScreenViewModel.store.collectAsState().value != null,
+                    demoVersion = demoVersion
+                ),
 
                 dropdownMenuActions = dropdownMenuActions,
 
