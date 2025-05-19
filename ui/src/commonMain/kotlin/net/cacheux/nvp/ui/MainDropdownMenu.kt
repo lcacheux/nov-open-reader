@@ -7,21 +7,30 @@ import androidx.compose.runtime.Composable
 import net.cacheux.nvp.ui.ui.generated.resources.Res
 import net.cacheux.nvp.ui.ui.generated.resources.export_csv
 import net.cacheux.nvp.ui.ui.generated.resources.import_csv
+import net.cacheux.nvp.ui.ui.generated.resources.init_demo_data
 import net.cacheux.nvp.ui.ui.generated.resources.load_raw_data
 import net.cacheux.nvp.ui.ui.generated.resources.save_raw_data
 import org.jetbrains.compose.resources.stringResource
+
+data class MainDropdownMenuParams(
+    val loadingFileAvailable: Boolean = false,
+    val storeAvailable: Boolean = false,
+    val demoVersion: Boolean = false
+)
 
 data class MainDropdownMenuActions(
     val onLoadingClick: () -> Unit = {},
     val onSaveStore: () -> Unit = {},
     val onExportCsv: () -> Unit = {},
-    val onImportCsv: () -> Unit = {}
+    val onImportCsv: () -> Unit = {},
+    val onInitDemo: () -> Unit = {},
 ) {
     fun and(action: () -> Unit) = MainDropdownMenuActions(
         { onLoadingClick(); action() },
         { onSaveStore(); action() },
         { onExportCsv(); action() },
-        { onImportCsv(); action() }
+        { onImportCsv(); action() },
+        { onInitDemo(); action() }
     )
 }
 
@@ -29,15 +38,14 @@ data class MainDropdownMenuActions(
 fun MainDropdownMenu(
     opened: Boolean = true,
     onDismiss: () -> Unit = {},
-    loadingFileAvailable: Boolean = false,
-    storeAvailable: Boolean = false,
+    params: MainDropdownMenuParams = MainDropdownMenuParams(),
     actions: MainDropdownMenuActions = MainDropdownMenuActions()
 ) {
     DropdownMenu(
         expanded = opened,
         onDismissRequest = onDismiss
     ) {
-        if (loadingFileAvailable) {
+        if (params.loadingFileAvailable) {
             DropdownMenuItem(
                 text = {
                     Text(text = stringResource(Res.string.load_raw_data))
@@ -46,7 +54,7 @@ fun MainDropdownMenu(
             )
         }
         DropdownMenuItem(
-            enabled = storeAvailable,
+            enabled = params.storeAvailable,
             text = {
                 Text(text = stringResource(Res.string.save_raw_data))
             },
@@ -64,5 +72,13 @@ fun MainDropdownMenu(
             },
             onClick = actions.onImportCsv
         )
+        if (params.demoVersion) {
+            DropdownMenuItem(
+                text = {
+                    Text(text = stringResource(Res.string.init_demo_data))
+                },
+                onClick = actions.onInitDemo
+            )
+        }
     }
 }

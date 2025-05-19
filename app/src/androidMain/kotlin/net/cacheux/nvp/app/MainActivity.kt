@@ -14,6 +14,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import net.cacheux.nvp.app.BuildConfig.DEMO_VERSION
 import net.cacheux.nvp.app.repository.ActivityRequirer
 import net.cacheux.nvp.app.repository.PenInfoRepository
 import net.cacheux.nvp.app.ui.ScreenWrapper
@@ -51,8 +52,10 @@ class MainActivity : ComponentActivity() {
                         MainDropdownMenuActions(
                             onSaveStore = { saveRawFile() },
                             onExportCsv = { saveCsvFile() },
-                            onImportCsv = { loadCsvFile() }
-                        )
+                            onImportCsv = { loadCsvFile() },
+                            onInitDemo = { mainScreenViewModel.initDemoData() }
+                        ),
+                        demoVersion = DEMO_VERSION
                     )
                 }
             }

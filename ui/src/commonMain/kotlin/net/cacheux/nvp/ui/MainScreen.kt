@@ -38,8 +38,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
-import net.cacheux.nvp.model.Dose
 import net.cacheux.nvp.model.DoseGroup
+import net.cacheux.nvp.model.testDateTime
+import net.cacheux.nvp.model.testDoseGroup
 import net.cacheux.nvp.ui.ui.generated.resources.Res
 import net.cacheux.nvp.ui.ui.generated.resources.app_name
 import net.cacheux.nvp.ui.ui.generated.resources.open_drawer
@@ -48,7 +49,6 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.GregorianCalendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,10 +59,8 @@ fun MainScreen(
     loading: Boolean = false,
     onDismissMessage: () -> Unit = {},
 
-    loadingFileAvailable: Boolean = false,
-    storeAvailable: Boolean = false,
-
     sideMenuParams: SideMenuParams = SideMenuParams(),
+    dropdownMenuParams: MainDropdownMenuParams = MainDropdownMenuParams(),
     dropdownMenuActions: MainDropdownMenuActions = MainDropdownMenuActions()
 ) {
     val currentDoseGroup = remember { mutableStateOf<DoseGroup?>(null) }
@@ -121,13 +119,12 @@ fun MainScreen(
         BottomSheetScaffold(
             topBar = {
                 CustomTopBar(
-                    loadingFileAvailable = loadingFileAvailable,
-                    storeAvailable = storeAvailable,
                     onNavClick = {
                         scope.launch {
                             drawerState.open()
                         }
                     },
+                    mainDropdownMenuParams = dropdownMenuParams,
                     dropdownMenuActions = dropdownMenuActions
                 )
             },
@@ -165,9 +162,8 @@ fun MainScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomTopBar(
-    loadingFileAvailable: Boolean = false,
-    storeAvailable: Boolean = false,
     onNavClick: () -> Unit = {},
+    mainDropdownMenuParams: MainDropdownMenuParams = MainDropdownMenuParams(),
     dropdownMenuActions: MainDropdownMenuActions = MainDropdownMenuActions(),
 ) {
     var dropdownOpened by remember { mutableStateOf(false) }
@@ -202,8 +198,7 @@ fun CustomTopBar(
             MainDropdownMenu(
                 opened = dropdownOpened,
                 onDismiss = { dropdownOpened = false },
-                loadingFileAvailable = loadingFileAvailable,
-                storeAvailable = storeAvailable,
+                params = mainDropdownMenuParams,
                 actions = dropdownMenuActions.and { dropdownOpened = false }
             )
         },
@@ -279,12 +274,3 @@ fun PreviewDoseDisplay() {
     val dose = testDoseGroup(testDateTime(12, 2, 23), 42)
     DoseDisplay(dose)
 }
-
-fun testDoseGroup(date: Long, value: Int) = DoseGroup(
-    doses = listOf(Dose(date, value))
-)
-
-fun testDateTime(hours: Int, min: Int, sec: Int, date: Int = 1, month: Int = 1, year: Int = 2024) =
-    GregorianCalendar.getInstance().apply {
-        set(year, month, date, hours, min, sec)
-    }.time.time

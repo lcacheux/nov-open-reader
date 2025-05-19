@@ -87,8 +87,11 @@ fun main() = application {
                         )
                     }
                 },
-                onImportCsv = { loadCsvPicker.launch() }
-            )
+                onImportCsv = { loadCsvPicker.launch() },
+                onInitDemo = { mainScreenViewModel.initDemoData() }
+            ),
+
+            demoVersion = true
         )
     }
 }

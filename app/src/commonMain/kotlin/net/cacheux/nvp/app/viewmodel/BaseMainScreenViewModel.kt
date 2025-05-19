@@ -7,6 +7,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import net.cacheux.nvp.app.repository.PenInfoRepository
@@ -16,6 +17,7 @@ import net.cacheux.nvp.app.utils.csvToDoseList
 import net.cacheux.nvp.logging.logDebug
 import net.cacheux.nvp.model.Dose
 import net.cacheux.nvp.model.DoseGroup
+import net.cacheux.nvp.model.generateDoseData
 import net.cacheux.nvp.ui.ui.generated.resources.Res
 import net.cacheux.nvp.ui.ui.generated.resources.csv_loaded
 import net.cacheux.nvp.ui.ui.generated.resources.loading_csv
@@ -76,6 +78,18 @@ open class BaseMainScreenViewModel (
                         isReading.value = false
                     }
                 }
+            }
+        }
+    }
+
+    fun initDemoData() {
+        coroutineScope.launch {
+            storageRepository.saveDoseList(generateDoseData("ABCD1234", "EFGH5678"))
+            getPenList().first().firstOrNull { it.serial == "ABCD1234" }?.let {
+                storageRepository.updatePen(it.copy(name = "NovoRapid", color = "99ff99"))
+            }
+            getPenList().first().firstOrNull { it.serial == "EFGH5678" }?.let {
+                storageRepository.updatePen(it.copy(name = "Tresiba", color = "ffcccc"))
             }
         }
     }

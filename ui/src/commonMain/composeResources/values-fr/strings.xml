@@ -9,6 +9,7 @@
     <string name="save_raw_data">Enregistrer les données brutes</string>
     <string name="export_csv">Exporter au format CSV</string>
     <string name="import_csv">Importer un fichier CSV</string>
+    <string name="init_demo_data">Initialiser les données de démo</string>
     <string name="back_button">Bouton retour</string>
 
     <string name="ok">OK</string>
