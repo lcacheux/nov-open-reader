@@ -105,8 +105,8 @@ android {
         applicationId = "net.cacheux.nvp.app"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.compileSdk.get().toInt()
-        versionCode = 10103
-        versionName = "1.1.3"
+        versionCode = 10200
+        versionName = "1.2.0"
 
         testInstrumentationRunner = "net.cacheux.nvp.app.CustomTestRunner"
         vectorDrawables {
@@ -176,7 +176,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "net.cacheux.nvp.app"
-            packageVersion = "1.0.0"
+            packageVersion = "1.2.0"
         }
     }
 }

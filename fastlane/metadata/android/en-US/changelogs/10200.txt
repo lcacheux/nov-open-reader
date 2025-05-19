@@ -1,0 +1,4 @@
+Add pen configuration : display name and color can be set in a dedicated menu
+CSV export default filename now include the date and time
+Handle properly the back button when menus, configuration screens and popups are opened
+Fix wrong Material theme used

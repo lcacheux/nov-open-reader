@@ -1,0 +1,4 @@
+Ajout de la configuration des stylos : le nom et la couleur peuvent être changés dans un menu dédié
+Le nom de fichier par défaut de l'export CSV inclut maintenant la date et l'heure
+Gestion du bouton retour pour les menus, écrans de configuration et popups
+Correction d'une mauvaise utilisation du thème Material
