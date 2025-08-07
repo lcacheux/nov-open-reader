@@ -13,7 +13,7 @@ plugins {
 group = "net.cacheux.nvp.app"
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(libs.versions.java.get().toInt())
 
     jvm("desktop")
 

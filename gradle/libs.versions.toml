@@ -2,7 +2,7 @@
 java = "17"
 android-minSdk = "24"
 android-compileSdk = "35"
-agp = "8.10.0"
+agp = "8.10.1"
 compose-plugin="1.6.11"
 hilt = "2.56.2"
 kotlinx-serialization-core = "1.6.3"
@@ -56,3 +56,4 @@ espresso-core = { group = "androidx.test.espresso", name = "espresso-core", vers
 mockito-android = { group = "org.mockito", name = "mockito-android", version = "5.12.0" }
 mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version = "5.4.0" }
 turbine = { group = "app.cash.turbine", name = "turbine", version = "1.2.0" }
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version = "1.8.3" }

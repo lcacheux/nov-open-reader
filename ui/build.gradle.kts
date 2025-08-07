@@ -8,7 +8,7 @@ plugins {
 group = "net.cacheux.nvp.ui"
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(libs.versions.java.get().toInt())
 
     jvm()
     androidTarget()
@@ -65,4 +65,8 @@ android {
     buildFeatures {
         compose = true
     }
+}
+
+dependencies {
+    debugImplementation(libs.androidx.ui.tooling)
 }
