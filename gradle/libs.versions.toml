@@ -2,13 +2,11 @@
 java = "17"
 android-minSdk = "24"
 android-compileSdk = "36"
-agp = "8.10.1"
+agp = "8.13.0"
 compose-plugin="1.8.2"
 hilt = "2.57.1"
-kotlinx-serialization-core = "1.6.3"
-core-ktx = "1.16.0"
 kotlin = "2.1.21"
-coroutines = "1.9.0"
+coroutines = "1.10.2"
 room = "2.7.2"
 sqlite = "2.5.2"
 androidx-datastore = "1.1.7"
@@ -51,9 +49,9 @@ hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", vers
 
 # Testing
 junit = { group = "junit", name = "junit", version = "4.13.2" }
-androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version = "1.2.1" }
-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version = "3.6.1" }
-mockito-android = { group = "org.mockito", name = "mockito-android", version = "5.12.0" }
-mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version = "5.4.0" }
-turbine = { group = "app.cash.turbine", name = "turbine", version = "1.2.0" }
-androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version = "1.8.3" }
+androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version = "1.3.0" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version = "3.7.0" }
+mockito-android = { group = "org.mockito", name = "mockito-android", version = "5.19.0" }
+mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version = "6.0.0" }
+turbine = { group = "app.cash.turbine", name = "turbine", version = "1.2.1" }
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version = "1.9.0" }
