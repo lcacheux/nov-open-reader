@@ -105,11 +105,8 @@ fun DoseListItem(
 
     Box(
         modifier = Modifier
-            .background(color =
-                if (isCurrent)
-                    MaterialTheme.colorScheme.surfaceVariant
-                else
-                    dose.doses.first().color.hexToColor().copy(alpha = 0.5f)
+            .background(
+                color = dose.doses.first().color.hexToColor().copy(alpha = 0.5f)
             )
             .fillMaxWidth()
             .clickable { onClick(dose) }
@@ -128,6 +125,13 @@ fun DoseListItem(
                 fontWeight = FontWeight.SemiBold,
                 text = dose.displayedTotal()
             )
+
+            if (isCurrent) {
+                DoseGroupDetails(
+                    doseGroup = dose,
+                    modifier = Modifier.padding(start = 4.dp, top = 4.dp, end = 4.dp, bottom = 8.dp)
+                )
+            }
         }
     }
 }
@@ -135,15 +139,19 @@ fun DoseListItem(
 @Preview
 @Composable
 fun DoseListPreview() {
+    val current = testDoseGroup(testDateTime(12, 1, 14), 14)
     val items = listOf(
         testDoseGroup(testDateTime(12, 1, 12), 12),
         testDoseGroup(testDateTime(12, 1, 13), 13),
-        testDoseGroup(testDateTime(12, 1, 14), 14),
+        current,
         testDoseGroup(testDateTime(12, 1, 14, date = 2), 14),
         testDoseGroup(testDateTime(12, 1, 15, date = 2), 14),
         testDoseGroup(testDateTime(12, 1, 14, date = 3), 14),
     )
-    DoseList(items)
+    DoseList(
+        items,
+        currentDoseGroup = current
+    )
 }
 
 @Preview

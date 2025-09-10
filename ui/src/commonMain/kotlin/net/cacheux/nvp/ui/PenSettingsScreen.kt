@@ -1,20 +1,20 @@
 package net.cacheux.nvp.ui
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import net.cacheux.nvp.model.PenInfos
 import net.cacheux.nvp.ui.ui.generated.resources.Res
 import net.cacheux.nvp.ui.ui.generated.resources.back_button
@@ -30,49 +30,51 @@ data class PenSettingsScreenParams(
     val onNameChanged: (serial: String, name: String) -> Unit = { _, _ -> }
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PenSettingsScreen(
     params: PenSettingsScreenParams = PenSettingsScreenParams()
 ) {
-    Column {
-        Row {
-            IconButton(
-                onClick = params.onBack,
-                modifier = Modifier.align(Alignment.CenterVertically)
-            ) {
-                Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(
-                    Res.string.back_button)
-                )
-            }
-
-            Text(
-                text = stringResource(Res.string.pen_settings),
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(16.dp)
-                    .align(Alignment.CenterVertically)
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                navigationIcon = {
+                    IconButton(
+                        onClick = params.onBack
+                    ) {
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(
+                            Res.string.back_button)
+                        )
+                    }
+                },
+                title = { Text(text = stringResource(Res.string.pen_settings)) },
             )
         }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            params.penList.forEachIndexed { index, pen ->
+                PenHeader(pen)
 
-        params.penList.forEachIndexed { index, pen ->
-            PenHeader(pen)
+                StringPreference(
+                    label = stringResource(Res.string.pen_name),
+                    value = stateWrapper(pen.name) { value ->
+                        params.onNameChanged(pen.serial, value)
+                    },
+                    testTag = "penNameProp${pen.serial}"
+                )
 
-            StringPreference(
-                label = stringResource(Res.string.pen_name),
-                value = stateWrapper(pen.name) { value ->
-                    params.onNameChanged(pen.serial, value)
-                },
-                testTag = "penNameProp${pen.serial}"
-            )
+                ColorPreference(
+                    label = stringResource(Res.string.pen_color),
+                    value = stateWrapper(pen.color) { value ->
+                        params.onColorChanged(pen.serial, value)
+                    },
+                    testTag = "penColorProp${pen.serial}"
+                )
 
-            ColorPreference(
-                label = stringResource(Res.string.pen_color),
-                value = stateWrapper(pen.color) { value ->
-                    params.onColorChanged(pen.serial, value)
-                },
-                testTag = "penColorProp${pen.serial}"
-            )
-
-            if (index < params.penList.size - 1) PrefDivider()
+                if (index < params.penList.size - 1) PrefDivider()
+            }
         }
     }
 }

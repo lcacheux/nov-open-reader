@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,12 +18,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.SheetValue
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberDrawerState
-import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -66,21 +63,6 @@ fun MainScreen(
     val currentDoseGroup = remember { mutableStateOf<DoseGroup?>(null) }
 
     val scope = rememberCoroutineScope()
-    val scaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = rememberStandardBottomSheetState(
-            initialValue = SheetValue.Hidden,
-            skipHiddenState = false,
-            confirmValueChange = { sheetValue ->
-                if (sheetValue != SheetValue.Expanded) currentDoseGroup.value = null
-                true
-            }
-        )
-    )
-
-    BackHandlerWrapper(enabled = currentDoseGroup.value != null) {
-        scope.launch { scaffoldState.bottomSheetState.hide() }
-    }
-
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
     BackHandlerWrapper(enabled = drawerState.isOpen) {
@@ -116,7 +98,7 @@ fun MainScreen(
             )
         }
     ) {
-        BottomSheetScaffold(
+        Scaffold(
             topBar = {
                 CustomTopBar(
                     onNavClick = {
@@ -128,15 +110,10 @@ fun MainScreen(
                     dropdownMenuActions = dropdownMenuActions
                 )
             },
-            scaffoldState = scaffoldState,
-            sheetContent = {
-                currentDoseGroup.value?.let {
-                    DoseGroupDetails(doseGroup = it)
-                }
-            },
-            sheetPeekHeight = 0.dp
-        ) {
-            Column {
+        ) { innerPadding ->
+            Column(
+                modifier = Modifier.padding(innerPadding)
+            ) {
                 DoseList(
                     doseList,
                     currentDoseGroup = currentDoseGroup.value,
@@ -144,12 +121,8 @@ fun MainScreen(
                         scope.launch {
                             if (currentDoseGroup.value == it) {
                                 currentDoseGroup.value = null
-                                scaffoldState.bottomSheetState.hide()
                             } else {
-                                currentDoseGroup.value = null
-                                scaffoldState.bottomSheetState.hide()
                                 currentDoseGroup.value = it
-                                scaffoldState.bottomSheetState.expand()
                             }
                         }
                     }
