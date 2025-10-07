@@ -24,16 +24,12 @@ val format = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
 
 @Composable
 fun DoseGroupDetails(
-    doseGroup: DoseGroup
+    doseGroup: DoseGroup,
+    modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier.background(Color.White)
+        modifier = modifier.background(Color.White)
     ) {
-        Text(
-            text = "Total: ${doseGroup.displayedTotal()}",
-            fontWeight = FontWeight.Bold,
-        )
-
         doseGroup.doses.forEach {
             DoseDetails(dose = it)
         }

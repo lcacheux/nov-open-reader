@@ -1,21 +1,18 @@
 [versions]
 java = "17"
 android-minSdk = "24"
-android-compileSdk = "34"
-agp = "8.8.0"
-compose-plugin="1.6.11"
-hilt = "2.52"
-kotlinx-serialization-core = "1.6.3"
-core-ktx = "1.13.1"
-kotlin = "1.9.24"
-coroutines = "1.8.1"
-compose-compiler = "1.5.14"
-room = "2.7.0-alpha11"
-sqlite = "2.5.0-SNAPSHOT"
-androidx-datastore = "1.1.1"
+android-compileSdk = "36"
+agp = "8.13.0"
+compose-plugin="1.8.2"
+hilt = "2.57.1"
+kotlin = "2.1.21"
+coroutines = "1.10.2"
+room = "2.7.2"
+sqlite = "2.5.2"
+androidx-datastore = "1.1.7"
 
 [plugins]
-ksp = { id = "com.google.devtools.ksp", version = "1.9.24-1.0.20" }
+ksp = { id = "com.google.devtools.ksp", version = "2.1.21-2.0.1" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
@@ -24,21 +21,20 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 room = { id = "androidx.room", version.ref = "room" }
 jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 dokka = { id = "org.jetbrains.dokka", version = "2.0.0" }
 
 [libraries]
-filekit-compose = { module = "io.github.vinceglb:filekit-compose", version = "0.8.2" }
+colorpicker-compose = { module = "com.github.skydoves:colorpicker-compose", version = "1.1.2" }
+filekit-compose = { module = "io.github.vinceglb:filekit-compose", version = "0.8.8" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
-kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinx-serialization-core" }
-appcompat = { group = "androidx.appcompat", name = "appcompat", version = "1.7.0" }
-androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.9.3" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.10.1" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version = "androidx-datastore" }
 androidx-datastore-core = { module = "androidx.datastore:datastore-core", version.ref = "androidx-datastore" }
-androidx-lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version = "2.8.2" }
+androidx-lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version = "2.9.3" }
 
 # Room
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
@@ -53,9 +49,9 @@ hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", vers
 
 # Testing
 junit = { group = "junit", name = "junit", version = "4.13.2" }
-androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version = "1.2.1" }
-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version = "3.6.1" }
-mockito = { group = "org.mockito", name = "mockito-core", version = "5.12.0" }
-mockito-android = { group = "org.mockito", name = "mockito-android", version = "5.12.0" }
-mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version = "5.4.0" }
-turbine = { group = "app.cash.turbine", name = "turbine", version = "1.2.0" }
+androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version = "1.3.0" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version = "3.7.0" }
+mockito-android = { group = "org.mockito", name = "mockito-android", version = "5.19.0" }
+mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version = "6.0.0" }
+turbine = { group = "app.cash.turbine", name = "turbine", version = "1.2.1" }
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version = "1.9.0" }

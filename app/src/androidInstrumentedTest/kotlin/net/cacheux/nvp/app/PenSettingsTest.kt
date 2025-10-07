@@ -40,7 +40,7 @@ import org.junit.runner.RunWith
 class PenSettingsTest {
 
     companion object {
-        val BACKGROUND = "fffbfe".hexToColor()
+        val BACKGROUND = "fff7fe".hexToColor()
     }
 
     @Inject

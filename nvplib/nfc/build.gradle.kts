@@ -7,7 +7,7 @@ plugins {
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(libs.versions.java.get().toInt())
 }
 
 android {
@@ -29,6 +29,10 @@ android {
                 "proguard-rules.pro"
             )
         }
+    }
+
+    publishing {
+        singleVariant("release") {}
     }
 }
 
