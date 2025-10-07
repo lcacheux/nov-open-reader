@@ -10,6 +10,8 @@ data class InsulinDose(
     @IsInt val flags: Int
 ): Encodable() {
     companion object {
+        const val VALID_FLAG = 0x08000000
+
         fun fromByteBuffer(buffer: ByteBuffer): InsulinDose {
             val relativeTime = buffer.getUnsignedInt()
             val units = (buffer.getUnsignedInt() and 0xFFFF)

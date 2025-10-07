@@ -38,10 +38,10 @@ data class EventReport(
                     val currentTime = System.currentTimeMillis()
 
                     repeat(count) {
-                        doses.add(InsulinDose
-                            .fromByteBuffer(buffer)
-                            .withUtcTime(relativeTime, currentTime)
-                        )
+                        InsulinDose.fromByteBuffer(buffer).let {
+                            if (it.flags == InsulinDose.VALID_FLAG)
+                                doses.add(it.withUtcTime(relativeTime, currentTime))
+                        }
                     }
                     EventReport(handle, relativeTime, eventType, null, instance, index, doses)
                 }
