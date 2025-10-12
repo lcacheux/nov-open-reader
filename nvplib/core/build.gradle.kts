@@ -45,7 +45,7 @@ publishing {
         create<MavenPublication>("mavenCore") {
             groupId = "net.cacheux.nvplib"
             artifactId = "nvplib-core"
-            version = "0.1.1"
+            version = "0.1.2"
             afterEvaluate {
                 from(components["java"])
                 artifact(tasks["dokkaHtmlJar"])
