@@ -10,11 +10,13 @@ plugins {
     alias(libs.plugins.compose.compiler) apply false
     alias(libs.plugins.hilt.android) apply false
     alias(libs.plugins.ksp) apply false
+    alias(libs.plugins.sonarqube)
     signing
 }
 
 val localProperties by extra { Properties().apply {
-    load(File("$rootDir/local.properties").inputStream())
+    if (File("$rootDir/local.properties").exists())
+        load(File("$rootDir/local.properties").inputStream())
 } }
 
 val gpgSigningAvailable = listOf("gpgSigningKey", "gpgSigningPass").map {
@@ -32,5 +34,12 @@ val signingIfAvailable by extra {
                 )
             }
         }
+    }
+}
+
+sonar {
+    properties {
+        property("sonar.projectKey", "lcacheux_nov-open-reader")
+        property("sonar.organization", "lcacheux")
     }
 }
