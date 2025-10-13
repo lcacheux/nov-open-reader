@@ -43,11 +43,22 @@ interface DoseDao {
     @Query("SELECT * FROM pen WHERE serial = :serial")
     fun getPenWithDoses(serial: String): Flow<PenWithDoses>
 
+    @Query("DELETE FROM dose WHERE pen = (SELECT id FROM pen WHERE serial = :serial)")
+    suspend fun deleteDosesByPenSerial(serial: String)
+
+    @Query("DELETE FROM pen WHERE serial = :serial")
+    suspend fun deletePenBySerial(serial: String)
+
     @Query("DELETE FROM dose")
     suspend fun deleteAllDoses()
 
     @Query("DELETE FROM pen")
     suspend fun deleteAllPens()
+
+    suspend fun deletePen(serial: String) {
+        deleteDosesByPenSerial(serial)
+        deletePenBySerial(serial)
+    }
 
     suspend fun deleteAll() {
         deleteAllPens()

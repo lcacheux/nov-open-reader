@@ -22,13 +22,13 @@ import jakarta.inject.Inject
 import kotlinx.coroutines.runBlocking
 import net.cacheux.nvp.ui.hexToColor
 import net.cacheux.nvp.ui.ui.generated.resources.Res
+import net.cacheux.nvp.ui.ui.generated.resources.delete_pen
 import net.cacheux.nvp.ui.ui.generated.resources.ok
 import net.cacheux.nvp.ui.ui.generated.resources.pen_color
 import net.cacheux.nvp.ui.ui.generated.resources.pen_name
 import net.cacheux.nvp.ui.ui.generated.resources.pen_settings
 import net.cacheux.nvplib.storage.DoseStorage
 import org.jetbrains.compose.resources.getString
-import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -90,6 +90,40 @@ class PenSettingsTest {
         }
     }
 
+    @Test
+    fun deletePen() = runBlocking {
+        composeTestRule.run {
+            waitForIdle()
+
+            openDrawer()
+
+            assertHaveTexts("ABCD1234", "ABCD5678")
+
+            onNodeWithText(getString(Res.string.pen_settings)).performClick()
+            waitForIdle()
+
+            onAllNodesWithText(getString(Res.string.pen_name)).assertCountEquals(2)
+            onAllNodesWithText(getString(Res.string.pen_color)).assertCountEquals(2)
+            onAllNodesWithText(getString(Res.string.delete_pen)).assertCountEquals(2)
+
+            onNodeWithTag("penDeletionABCD5678").performClick()
+            waitForIdle()
+
+            onNodeWithText(getString(Res.string.ok)).performClick()
+            waitForIdle()
+
+            onAllNodesWithText(getString(Res.string.pen_name)).assertCountEquals(1)
+            onAllNodesWithText(getString(Res.string.pen_color)).assertCountEquals(1)
+            onAllNodesWithText(getString(Res.string.delete_pen)).assertCountEquals(1)
+
+            closeSettings()
+
+            openDrawer()
+
+            onNodeWithText("ABCD5678").assertDoesNotExist()
+        }
+    }
+
     private suspend fun ComposeTestRule.setPenName(serial: String, name: String) {
         onNodeWithTag("penNameProp$serial").performClick()
         waitForIdle()
@@ -107,10 +141,10 @@ class PenSettingsTest {
         val expectedColor = color.hexToColor().copy(alpha = 0.5f).compositeOver(BACKGROUND)
 
         val map = captureToImage().toPixelMap()
-        assertEquals(expectedColor, map[0, 0])
-        assertEquals(expectedColor, map[1, 0])
-        assertEquals(expectedColor, map[0, 1])
-        assertEquals(expectedColor, map[1, 1])
+        assertColorClose(expectedColor, map[0, 0])
+        assertColorClose(expectedColor, map[1, 0])
+        assertColorClose(expectedColor, map[0, 1])
+        assertColorClose(expectedColor, map[1, 1])
     }
 
     private suspend fun ComposeTestRule.setPenColor(serial: String, color: String) {

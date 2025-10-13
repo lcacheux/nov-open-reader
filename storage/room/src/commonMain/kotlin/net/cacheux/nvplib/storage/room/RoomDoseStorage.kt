@@ -68,6 +68,10 @@ class RoomDoseStorage(
         }
     }
 
+    override suspend fun deletePen(serial: String) {
+        database.doseDao().deletePen(serial)
+    }
+
     override fun listAllPens(): Flow<List<PenInfos>>
         = database.doseDao().listAllPens().map { it.map { pen -> pen.toPenInfos() } }
 

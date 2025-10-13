@@ -21,6 +21,8 @@
     <string name="pen_name">Nom</string>
     <string name="pen_color">Couleur</string>
     <string name="select_color">Choisir une couleur</string>
+    <string name="delete_pen">Supprimer le stylo</string>
+    <string name="delete_pen_warning">Êtes vous sûr de vouloir supprimer le stylo et toutes ses données ?</string>
 
     <!-- Settings screen -->
     <string name="settings">Paramètres</string>
