@@ -8,6 +8,7 @@ import kotlinx.coroutines.runBlocking
 import net.cacheux.nvp.model.Dose
 import net.cacheux.nvp.model.PenInfos
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Test
 
 class RoomDoseStorageTest {
@@ -64,6 +65,20 @@ class RoomDoseStorageTest {
             assertEquals("Second pen", this[1].name)
             assertEquals("#dddddd", this[1].color)
         }
+    }
+
+    @Test
+    fun testDeletePen() = runBlocking {
+        val storage = initStorage().apply { createDataset() }
+
+        assertEquals(2, storage.listAllPens().first().size)
+        assertEquals(5, storage.getAllDoses().first().size)
+
+        storage.deletePen("ABCD1234")
+
+        assertEquals(1, storage.listAllPens().first().size)
+        assertEquals(2, storage.getAllDoses().first().size)
+        assertNull(storage.listAllPens().first().firstOrNull { it.serial == "ABCD1234" })
     }
 
     @Test

@@ -28,4 +28,10 @@ open class BasePenSettingsViewModel(
             }
         }
     }
+
+    fun deletePen(serial: String) {
+        coroutineScope.launch {
+            storageRepository.deletePen(serial)
+        }
+    }
 }

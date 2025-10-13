@@ -82,7 +82,8 @@ fun ScreenWrapper(
                     penList = penSettingsViewModel.getPenList()
                         .collectAsState(listOf()).value,
                     onNameChanged = { serial, name -> penSettingsViewModel.updatePenName(serial, name) },
-                    onColorChanged = { serial, color -> penSettingsViewModel.updatePenColor(serial, color) }
+                    onColorChanged = { serial, color -> penSettingsViewModel.updatePenColor(serial, color) },
+                    onDeletePen = { serial -> penSettingsViewModel.deletePen(serial) },
                 )
             )
         }
