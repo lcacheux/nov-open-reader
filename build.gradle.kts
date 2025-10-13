@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.compose.compiler) apply false
     alias(libs.plugins.hilt.android) apply false
     alias(libs.plugins.ksp) apply false
+    alias(libs.plugins.sonarqube)
     signing
 }
 
@@ -32,5 +33,12 @@ val signingIfAvailable by extra {
                 )
             }
         }
+    }
+}
+
+sonar {
+    properties {
+        property("sonar.projectKey", "lcacheux_nov-open-reader")
+        property("sonar.organization", "lcacheux")
     }
 }

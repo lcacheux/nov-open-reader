@@ -23,6 +23,7 @@ room = { id = "androidx.room", version.ref = "room" }
 jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 dokka = { id = "org.jetbrains.dokka", version = "2.0.0" }
+sonarqube = { id = "org.sonarqube", version = "6.3.1.5724" }
 
 [libraries]
 colorpicker-compose = { module = "com.github.skydoves:colorpicker-compose", version = "1.1.2" }
