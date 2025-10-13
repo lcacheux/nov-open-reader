@@ -5,11 +5,18 @@ import net.cacheux.nvp.app.utils.csvToDoseList
 import net.cacheux.nvp.app.utils.toCsv
 import net.cacheux.nvp.model.Dose
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
 import java.time.LocalDateTime
 import java.time.ZoneOffset
+import java.util.TimeZone
 
 class CsvTest {
+    @Before
+    fun init() {
+        TimeZone.setDefault(TimeZone.getTimeZone("Europe/Paris"))
+    }
+
     @Test
     fun testToCsv() {
 
