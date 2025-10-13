@@ -15,7 +15,8 @@ plugins {
 }
 
 val localProperties by extra { Properties().apply {
-    load(File("$rootDir/local.properties").inputStream())
+    if (File("$rootDir/local.properties").exists())
+        load(File("$rootDir/local.properties").inputStream())
 } }
 
 val gpgSigningAvailable = listOf("gpgSigningKey", "gpgSigningPass").map {
