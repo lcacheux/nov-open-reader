@@ -35,6 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
+import net.cacheux.nvp.model.Dose
 import net.cacheux.nvp.model.DoseGroup
 import net.cacheux.nvp.model.testDateTime
 import net.cacheux.nvp.model.testDoseGroup
@@ -55,6 +56,8 @@ fun MainScreen(
 
     loading: Boolean = false,
     onDismissMessage: () -> Unit = {},
+
+    onDoseDeletion: (List<Dose>) -> Unit = {},
 
     sideMenuParams: SideMenuParams = SideMenuParams(),
     dropdownMenuParams: MainDropdownMenuParams = MainDropdownMenuParams(),
@@ -125,7 +128,8 @@ fun MainScreen(
                                 currentDoseGroup.value = it
                             }
                         }
-                    }
+                    },
+                    onDoseDeletion = onDoseDeletion
                 )
             }
         }

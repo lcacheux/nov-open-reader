@@ -35,6 +35,10 @@ class DoseGroup(
     fun displayedTotal() = String.format("%.1f", getTotal().toFloat() / 10)
 
     override fun date() = timestampToDate(getTime())
+
+    fun containsSameDosesAs(group: DoseGroup): Boolean {
+        return doses.any { group.doses.contains(it) }
+    }
 }
 
 fun List<Dose>.toDoseListWithIgnoredFlag(config: DoseGroupConfig): List<Dose> {

@@ -16,6 +16,7 @@ data class DoseWithPen(
         time = dose.time,
         value = dose.value,
         serial = pen.serial,
-        color = pen.color
+        color = pen.color,
+        id = dose.id
     )
 }

@@ -120,6 +120,21 @@ class RoomDoseStorageTest {
         assertEquals(12346850L, storage.getLastDose("ABCD2345").first()?.time)
     }
 
+    @Test
+    fun testDeleteDoses() = runBlocking {
+        val storage = initStorage().apply { createDataset() }
+
+        assertEquals(5, storage.getAllDoses().first().size)
+
+        storage.deleteDose(3)
+        storage.deleteDose(4)
+
+        assertEquals(3, storage.getAllDoses().first().size)
+        assertEquals(12345678L, storage.getAllDoses().first()[2].time)
+        assertEquals(12345690L, storage.getAllDoses().first()[1].time)
+        assertEquals(12346850L, storage.getAllDoses().first()[0].time)
+    }
+
     private fun initStorage(): RoomDoseStorage
         = RoomDoseStorage(
             Room.inMemoryDatabaseBuilder<NvpDatabase>()

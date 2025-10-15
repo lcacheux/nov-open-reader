@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import net.cacheux.nvp.model.Dose
 import net.cacheux.nvp.model.DoseGroup
 import net.cacheux.nvp.model.groupByDate
 import net.cacheux.nvp.model.testDateTime
@@ -40,7 +41,8 @@ val headerDate = SimpleDateFormat("dd/MM/YYYY")
 fun DoseList(
     items: List<DoseGroup>,
     currentDoseGroup: DoseGroup? = null,
-    onDoseClick: (DoseGroup) -> Unit = {}
+    onDoseClick: (DoseGroup) -> Unit = {},
+    onDoseDeletion: (List<Dose>) -> Unit = {},
 ) {
     if (items.isEmpty()) {
         Box(
@@ -67,8 +69,9 @@ fun DoseList(
                 items(doses) { item ->
                     DoseListItem(
                         dose = item,
-                        isCurrent = item == currentDoseGroup,
-                        onClick = onDoseClick
+                        isCurrent = currentDoseGroup?.containsSameDosesAs(item) ?: false,
+                        onClick = onDoseClick,
+                        onDoseDeletion = onDoseDeletion
                     )
                     HorizontalDivider()
                 }
@@ -99,7 +102,8 @@ fun DoseListHeader(
 fun DoseListItem(
     dose: DoseGroup,
     isCurrent: Boolean = false,
-    onClick: (DoseGroup) -> Unit  = {}
+    onClick: (DoseGroup) -> Unit  = {},
+    onDoseDeletion: (List<Dose>) -> Unit = {},
 ) {
     val format = SimpleDateFormat("HH:mm:ss")
 
@@ -129,7 +133,8 @@ fun DoseListItem(
             if (isCurrent) {
                 DoseGroupDetails(
                     doseGroup = dose,
-                    modifier = Modifier.padding(start = 4.dp, top = 4.dp, end = 4.dp, bottom = 8.dp)
+                    modifier = Modifier.padding(start = 4.dp, top = 4.dp, end = 4.dp, bottom = 8.dp),
+                    onDoseDeletion = onDoseDeletion
                 )
             }
         }

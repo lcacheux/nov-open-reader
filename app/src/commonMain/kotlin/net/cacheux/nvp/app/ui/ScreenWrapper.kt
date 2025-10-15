@@ -51,7 +51,9 @@ fun ScreenWrapper(
                 message = mainScreenViewModel.getReadMessage().collectAsState().value?.let {
                     stringResource(it)
                 },
-                onDismissMessage = { mainScreenViewModel.clearPopup() },
+                onDismissMessage = mainScreenViewModel::clearPopup,
+
+                onDoseDeletion = mainScreenViewModel::deleteDoses,
 
                 dropdownMenuParams = MainDropdownMenuParams(
                     loadingFileAvailable = true,
