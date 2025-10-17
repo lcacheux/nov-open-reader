@@ -64,6 +64,14 @@ open class BaseMainScreenViewModel (
 
     val store = repository.getDataStore()
 
+    fun deleteDoses(doses: List<Dose>) {
+        coroutineScope.launch {
+            doses.forEach {
+                storageRepository.deleteDose(it.id)
+            }
+        }
+    }
+
     fun loadCsvFile(input: InputStream) {
         input.reader().use {
             it.readText().csvToDoseList().let { doseList ->

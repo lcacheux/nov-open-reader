@@ -17,6 +17,9 @@
     <string name="reset">Reset</string>
     <string name="clear">Clear</string>
 
+    <string name="delete_selected">Delete selected</string>
+    <string name="delete_dose_warning">Are you sure you want to delete the selected doses?</string>
+
     <!-- Pen settings screen -->
     <string name="pen_name">Name</string>
     <string name="pen_color">Color</string>

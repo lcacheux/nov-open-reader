@@ -49,6 +49,9 @@ interface DoseDao {
     @Query("DELETE FROM pen WHERE serial = :serial")
     suspend fun deletePenBySerial(serial: String)
 
+    @Query("DELETE FROM dose WHERE id = :id")
+    suspend fun deleteDoseById(id: Long)
+
     @Query("DELETE FROM dose")
     suspend fun deleteAllDoses()
 

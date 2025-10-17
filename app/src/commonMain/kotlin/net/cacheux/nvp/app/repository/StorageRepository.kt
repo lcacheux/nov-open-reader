@@ -25,6 +25,10 @@ class StorageRepository(
         storage.deletePen(serial)
     }
 
+    suspend fun deleteDose(id: Long) {
+        storage.deleteDose(id)
+    }
+
     override suspend fun getStopCondition(): StopCondition {
         val currentTime = System.currentTimeMillis()
         val stopMap = storage.listAllPens().first().map {

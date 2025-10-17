@@ -18,5 +18,7 @@ interface DoseStorage {
 
     suspend fun deletePen(serial: String)
 
+    suspend fun deleteDose(id: Long)
+
     fun listAllPens(): Flow<List<PenInfos>>
 }

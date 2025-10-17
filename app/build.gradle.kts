@@ -36,7 +36,7 @@ kotlin {
 
         val androidInstrumentedTest by getting {
             dependencies {
-                implementation(libs.espresso.core)
+                implementation(libs.androidx.test.runner)
                 implementation(libs.androidx.test.ext.junit)
                 implementation(libs.hilt.android.testing)
                 implementation(libs.mockito.android)

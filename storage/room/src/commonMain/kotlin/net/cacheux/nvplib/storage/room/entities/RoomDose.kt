@@ -15,10 +15,12 @@ data class RoomDose(
 fun Dose.toRoomDose(penId: Long = 0) = RoomDose(
     time = time,
     value = value,
-    pen = penId
+    pen = penId,
+    id = id
 )
 
 fun RoomDose.toDose() = Dose(
     time = time,
-    value = value
+    value = value,
+    id = id
 )
