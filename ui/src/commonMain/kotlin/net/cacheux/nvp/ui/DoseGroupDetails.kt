@@ -29,6 +29,10 @@ import androidx.compose.ui.unit.dp
 import net.cacheux.nvp.model.Dose
 import net.cacheux.nvp.model.DoseGroup
 import net.cacheux.nvp.model.testDateTime
+import net.cacheux.nvp.ui.ui.generated.resources.Res
+import net.cacheux.nvp.ui.ui.generated.resources.delete_dose_warning
+import net.cacheux.nvp.ui.ui.generated.resources.delete_selected
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -75,15 +79,29 @@ fun DoseGroupDetails(
         }
 
         if (editMode) {
+            var showConfirm by remember { mutableStateOf(false) }
+
             Spacer(modifier = Modifier.height(4.dp))
             Button(
                 onClick = {
-                    onDoseDeletion(selected)
+                    showConfirm = true
                 },
                 modifier = Modifier.fillMaxWidth().padding(8.dp),
                 enabled = selected.isNotEmpty()
             ) {
-                Text("Delete selected")
+                Text(stringResource(Res.string.delete_selected))
+            }
+
+            if (showConfirm) {
+                ConfirmDialog(
+                    label = stringResource(Res.string.delete_selected),
+                    confirmMessage = stringResource(Res.string.delete_dose_warning),
+                    action = {
+                        onDoseDeletion(selected.toList())
+                        selected.clear()
+                    },
+                    onDismiss = { showConfirm = false }
+                )
             }
         }
     }

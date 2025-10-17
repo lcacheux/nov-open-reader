@@ -37,7 +37,7 @@ class DoseGroup(
     override fun date() = timestampToDate(getTime())
 
     fun containsSameDosesAs(group: DoseGroup): Boolean {
-        return doses.any { group.doses.contains(it) }
+        return doses.any { group.doses.map { it.id }.contains(it.id) }
     }
 }
 
