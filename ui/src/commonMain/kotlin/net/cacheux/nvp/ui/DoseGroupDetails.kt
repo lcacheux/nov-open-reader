@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -51,6 +52,7 @@ fun DoseGroupDetails(
 
     Column(
         modifier = modifier.background(Color.White)
+            .testTag("doseGroupDetails")
             .pointerInput(doseGroup) {
                 detectTapGestures(
                     onLongPress = { editMode = true }
@@ -63,6 +65,8 @@ fun DoseGroupDetails(
             ) {
                 if (editMode) {
                     Checkbox(
+                        modifier = Modifier.
+                            testTag("doseCheck${it.id}"),
                         checked = selected.contains(it),
                         onCheckedChange = { checked ->
                             if (checked) {
