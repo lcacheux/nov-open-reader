@@ -1,6 +1,6 @@
 Nov Open Reader est une application légère pour lire les données des stylos à insuline NFC de Novo Nordisk : NovoPen 6 et NovoPen Echo Plus.
 
-Placez le stylo sur le lecteur NFC de votre téléphone pour lancer la récupération des données, qui seront affichées sous forme de liste. Par défaut, les doses dans un délai d'une minute seront regroupées en une, et les premières doses de purge de 2 unités ou moins seront ignorées. Cliquez sur une dose pour afficher les détails.
+Placez le stylo sur le lecteur NFC de votre téléphone pour lancer la récupération des données, qui seront affichées sous forme de liste. Par défaut, les doses dans un délai d'une minute seront regroupées en une, et les premières doses de purge de 2 unités ou moins seront ignorées. Cliquez sur une dose pour afficher les détails. Un appui long sur les détails permet la suppression des doses.
 
 Le code source est disponible sur https://github.com/lcacheux/nov-open-reader
 

@@ -1,0 +1,7 @@
+Mise à jour vers la dernière version du SDK Android
+Les détails d'une dose groupée sont maintenant affichés directement dans la liste au lieu d'une
+popup en bas d'écran
+Ajout d'une option pour supprimer les stylos dans les paramètres
+Ajout d'une option pour supprimer des doses : un appui long sur les détails d'une dose groupée
+permet de sélectionner quelles doses supprimer
+Correction d'un bug où des doses incorrectes pouvaient être remontées

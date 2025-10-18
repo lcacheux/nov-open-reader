@@ -1,0 +1,6 @@
+Update to the last Android SDK version
+Dose details are now displayed inside the list instead of a bottom sheet
+Add an option to delete pens in the pen settings screen
+Add an option to delete individual doses : long click on dose details to choose which doses to
+delete
+Fix a bug where incorrect doses could be fetched
