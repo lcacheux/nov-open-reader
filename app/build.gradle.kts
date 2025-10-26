@@ -105,7 +105,7 @@ android {
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.compileSdk.get().toInt()
         versionCode = 10300
-        versionName = "1.3.0"
+        versionName = "1.3.0a"
 
         testInstrumentationRunner = "net.cacheux.nvp.app.CustomTestRunner"
         vectorDrawables {
