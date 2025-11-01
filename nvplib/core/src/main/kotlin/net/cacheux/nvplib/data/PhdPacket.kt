@@ -1,8 +1,9 @@
 package net.cacheux.nvplib.data
 
+import net.cacheux.bytonio.utils.ByteArrayReader
+import net.cacheux.bytonio.utils.writer
 import net.cacheux.nvplib.utils.getUnsignedByte
 import net.cacheux.nvplib.utils.putUnsignedByte
-import java.nio.ByteBuffer
 
 data class PhdPacket(
     val opcode: Byte = -1,
@@ -23,26 +24,26 @@ data class PhdPacket(
 
         private const val WELL_KNOWN = 1
 
-        fun fromByteBuffer(buffer: ByteBuffer): PhdPacket {
-            val opcode = buffer.getUnsignedByte()
-            val typeLen = buffer.getUnsignedByte()
-            val payloadLen = buffer.getUnsignedByte() - 1
+        fun fromByteArrayReader(reader: ByteArrayReader): PhdPacket {
+            val opcode = reader.getUnsignedByte()
+            val typeLen = reader.getUnsignedByte()
+            val payloadLen = reader.getUnsignedByte() - 1
             val hasId = opcode and (1 shl 3) != 0
             val headerLen = if (hasId) {
-                buffer.getUnsignedByte()
+                reader.getUnsignedByte()
             } else 0
-            val protoId = ByteArray(3)
-            buffer.get(protoId)
+            val protoId = reader.readByteArray(3)
             val header = if (hasId) {
-                ByteArray(headerLen).apply { buffer.get(this) }
+                reader.readByteArray(headerLen.toInt())
             } else null
-            val chk = buffer.getUnsignedByte()
-            val realLen = if (buffer.remaining() < payloadLen) buffer.remaining() else payloadLen
-            val inner = ByteArray(realLen).apply {
-                buffer.get(this)
-            }
+            val chk = reader.getUnsignedByte()
+            val realLen = if (reader.remaining() < payloadLen.toInt()) reader.remaining() else payloadLen.toInt()
+            val inner = reader.readByteArray(realLen)
 
-            return PhdPacket(opcode.toByte(), typeLen, realLen, headerLen, header, seq = (chk and 0x0f), chk = chk, inner)
+            return PhdPacket(opcode.toByte(), typeLen,
+                realLen, headerLen,
+                header, seq = (chk and 0x0f), chk = chk, inner
+            )
         }
     }
 
@@ -50,18 +51,18 @@ data class PhdPacket(
         val ilen = content.size
         val idLen = header?.size ?: 0
         val hasId = idLen > 0
-        val b = ByteBuffer.allocate(ilen + 7)
-        b.putUnsignedByte(MB or ME or SR or (if(hasId) IL else 0) or WELL_KNOWN)
-        b.putUnsignedByte(3)
-        b.putUnsignedByte(ilen + 1)
-        if (hasId) {
-            b.put(header)
-        }
-        b.put("PHD".toByteArray())
-        b.putUnsignedByte(seq and 0x0F or 0x80 or chk)
-        if (ilen > 0) {
-            b.put(content)
-        }
-        return b.array()
+        return ByteArray(ilen + 7).writer().apply {
+            putUnsignedByte(MB or ME or SR or (if(hasId) IL else 0) or WELL_KNOWN)
+            putUnsignedByte(3)
+            putUnsignedByte(ilen + 1)
+            if (hasId && header != null) {
+                writeByteArray(header)
+            }
+            writeByteArray("PHD".toByteArray())
+            putUnsignedByte(seq and 0x0F or 0x80 or chk)
+            if (ilen > 0) {
+                writeByteArray(content)
+            }
+        }.byteArray
     }
 }

@@ -1,8 +1,8 @@
 package net.cacheux.nvplib.data
 
+import net.cacheux.bytonio.utils.ByteArrayReader
 import net.cacheux.nvplib.utils.getIndexedString
 import net.cacheux.nvplib.utils.getUnsignedShort
-import java.nio.ByteBuffer
 
 data class Specification(
     val serial: String = "",
@@ -16,18 +16,18 @@ data class Specification(
         private const val HW_VERSION = 3
         private const val SW_VERSION = 4
 
-        fun fromByteBuffer(buffer: ByteBuffer): Specification {
+        fun fromByteArrayReader(reader: ByteArrayReader): Specification {
             var serial = ""
             var partNumber = ""
             var softwareRevision = ""
             var hardwareRevision = ""
 
-            val count = buffer.getUnsignedShort()
-            buffer.getUnsignedShort() // size
+            val count = reader.getUnsignedShort()
+            reader.getUnsignedShort() // size
             repeat(count) {
-                val type = buffer.getUnsignedShort()
-                buffer.getUnsignedShort() // component
-                val value = buffer.getIndexedString()
+                val type = reader.getUnsignedShort()
+                reader.getUnsignedShort() // component
+                val value = reader.getIndexedString()
 
                 when (type) {
                     SERIAL_NUMBER -> serial = value

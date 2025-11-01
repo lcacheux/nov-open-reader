@@ -1,26 +1,14 @@
 package net.cacheux.nvplib.data
 
-import net.cacheux.nvplib.annotations.IsShort
-import net.cacheux.nvplib.utils.getByteArray
-import net.cacheux.nvplib.utils.getUnsignedShort
-import java.nio.ByteBuffer
+import net.cacheux.bytonio.annotations.DataObject
+import net.cacheux.bytonio.annotations.EncodeAsShort
 
+@DataObject
 data class SegmentEntry(
-    @IsShort val classId: Int,
-    @IsShort val metricType: Int,
-    @IsShort val otype: Int,
-    @IsShort val handle: Int,
-    @IsShort val amCount: Int,
+    @EncodeAsShort val classId: Int,
+    @EncodeAsShort val metricType: Int,
+    @EncodeAsShort val otype: Int,
+    @EncodeAsShort val handle: Int,
+    @EncodeAsShort val amCount: Int,
     val data: ByteArray
-) {
-    companion object {
-        fun fromByteBuffer(buffer: ByteBuffer): SegmentEntry = SegmentEntry(
-            classId = buffer.getUnsignedShort(),
-            metricType = buffer.getUnsignedShort(),
-            otype = buffer.getUnsignedShort(),
-            handle = buffer.getUnsignedShort(),
-            amCount = buffer.getUnsignedShort(),
-            data = buffer.getByteArray()
-        )
-    }
-}
+)

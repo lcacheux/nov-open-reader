@@ -1,37 +1,48 @@
 package net.cacheux.nvplib.data
 
-import net.cacheux.nvplib.annotations.IsInt
-import net.cacheux.nvplib.annotations.IsShort
+import net.cacheux.bytonio.BinaryDeserializer
+import net.cacheux.bytonio.BinarySerializable
+import net.cacheux.bytonio.annotations.DataObject
+import net.cacheux.bytonio.annotations.Deserializer
+import net.cacheux.bytonio.annotations.EncodeAsShort
+import net.cacheux.bytonio.utils.ByteArrayReader
+import net.cacheux.bytonio.utils.reader
 import net.cacheux.nvplib.data.ApoepElement.Companion.APOEP
-import net.cacheux.nvplib.utils.getByteArray
-import net.cacheux.nvplib.utils.getUnsignedInt
-import net.cacheux.nvplib.utils.getUnsignedShort
-import java.nio.ByteBuffer
+import net.cacheux.nvplib.generated.ARequestSerializer
+import net.cacheux.nvplib.generated.ApoepElementDeserializer
 
+@DataObject
+@Deserializer(ARequestDeserializer::class)
 data class ARequest(
-    @IsInt val protocol: Int,
-    @IsInt val version: Int,
-    @IsShort val elements: Int,
+    val protocol: Int,
+    val version: Int,
+    @EncodeAsShort val elements: Int,
     val apoep: ApoepElement
-): Encodable() {
-    companion object {
-        fun fromByteBuffer(data: ByteBuffer): ARequest {
-            val version = data.getUnsignedInt()
-            val elements = data.getUnsignedShort()
-            data.getUnsignedShort() // len
+): BinarySerializable {
+    override fun getBinarySize() = ARequestSerializer.getBinarySize(this)
+    override fun toByteArray() = ARequestSerializer.toByteArray(this)
+}
 
-            var apoep: ApoepElement? = null
-            repeat(elements) {
-                val protocol = data.getUnsignedShort()
-                val bytes = data.getByteArray()
-                if (protocol == APOEP) {
-                    apoep = ApoepElement.fromByteBuffer(ByteBuffer.wrap(bytes))
-                }
+object ARequestDeserializer: BinaryDeserializer<ARequest> {
+    override fun fromByteArray(byteArray: ByteArray) =
+        fromByteArrayReader(byteArray.reader())
+
+    override fun fromByteArrayReader(reader: ByteArrayReader): ARequest {
+        val version = reader.readInt()
+        val elements = reader.readShort()
+        reader.readShort() // len
+
+        var apoep: ApoepElement? = null
+        repeat(elements) {
+            val protocol = reader.readShort()
+            val bytes = reader.readByteArray(reader.readShort())
+            if (protocol == APOEP) {
+                apoep = ApoepElementDeserializer.fromByteArray(bytes)
             }
-
-            apoep?.let {
-                return ARequest(protocol = APOEP, version, elements, it)
-            } ?: throw IllegalStateException("APOEP packet not found")
         }
+
+        apoep?.let {
+            return ARequest(protocol = APOEP, version, elements, it)
+        } ?: throw IllegalStateException("APOEP packet not found")
     }
 }

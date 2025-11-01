@@ -1,7 +1,6 @@
 package net.cacheux.nvplib.data
 
-import net.cacheux.nvplib.utils.getUnsignedShort
-import java.nio.ByteBuffer
+import net.cacheux.bytonio.utils.ByteArrayReader
 
 data class Configuration(
     val id: Int,
@@ -13,10 +12,10 @@ data class Configuration(
     val attributes: List<Attribute> = listOf()
 ) {
     companion object {
-        fun fromByteBuffer(buffer: ByteBuffer): Configuration {
-            val id = buffer.getUnsignedShort()
-            val count = buffer.getUnsignedShort()
-            buffer.getUnsignedShort() // len
+        fun fromByteArrayReader(reader: ByteArrayReader): Configuration {
+            val id = reader.readShort()
+            val count = reader.readShort()
+            reader.readShort() // len
 
             var nbSegment = -1
             var totalEntries = -1
@@ -26,13 +25,13 @@ data class Configuration(
             val attributes = mutableListOf<Attribute>()
 
             repeat(count) {
-                buffer.getUnsignedShort() // cls
-                buffer.getUnsignedShort() // handle
-                val attrCount = buffer.getUnsignedShort()
-                buffer.getUnsignedShort() //attrLen
+                reader.readShort() // cls
+                reader.readShort() // handle
+                val attrCount = reader.readShort()
+                reader.readShort() //attrLen
 
                 repeat(attrCount) {
-                    val attribute = Attribute.fromByteBuffer(buffer)
+                    val attribute = AttributeDeserializer.fromByteArrayReader(reader)
 
                     when (attribute.type) {
                         Attribute.ATTR_NUM_SEG -> nbSegment = attribute.value

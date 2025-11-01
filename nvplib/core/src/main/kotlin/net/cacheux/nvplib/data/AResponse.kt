@@ -1,13 +1,18 @@
 package net.cacheux.nvplib.data
 
-import net.cacheux.nvplib.annotations.IsShort
+import net.cacheux.bytonio.BinarySerializable
+import net.cacheux.bytonio.annotations.DataObject
+import net.cacheux.bytonio.annotations.EncodeAsShort
 import net.cacheux.nvplib.data.ApoepElement.Companion.SYS_TYPE_MANAGER
+import net.cacheux.nvplib.generated.AResponseSerializer
 
+@DataObject
 data class AResponse(
-    @IsShort var result: Int,
-    @IsShort var protocol: Int,
+    @EncodeAsShort var result: Int,
+    @EncodeAsShort var protocol: Int,
     var apoep: ApoepElement
-): Encodable() {
+): BinarySerializable {
+    override fun getBinarySize() = AResponseSerializer.getBinarySize(this)
     override fun toByteArray(): ByteArray {
         apoep.recMode = 0
         apoep.configId = 0
@@ -15,6 +20,6 @@ data class AResponse(
         apoep.listCount = 0
         apoep.listLen = 0
 
-        return super.toByteArray()
+        return AResponseSerializer.toByteArray(this)
     }
 }

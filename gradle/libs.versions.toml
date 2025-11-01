@@ -1,5 +1,5 @@
 [versions]
-java = "17"
+java = "21"
 android-minSdk = "24"
 android-compileSdk = "36"
 agp = "8.13.2"
@@ -10,6 +10,7 @@ coroutines = "1.10.2"
 room = "2.8.2"
 sqlite = "2.6.1"
 androidx-datastore = "1.1.7"
+bytonio = "0.0.1"
 
 [plugins]
 ksp = { id = "com.google.devtools.ksp", version = "2.1.21-2.0.1" }
@@ -47,6 +48,10 @@ androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.r
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
 hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hilt" }
+
+# Bytonio
+bytonio-core = { module = "net.cacheux.bytonio:bytonio-core", version.ref = "bytonio" }
+bytonio-processor = { module = "net.cacheux.bytonio:bytonio-processor", version.ref = "bytonio" }
 
 # Testing
 junit = { group = "junit", name = "junit", version = "4.13.2" }

@@ -1,8 +1,8 @@
 package net.cacheux.nvplib.data
 
+import net.cacheux.bytonio.utils.writer
 import net.cacheux.nvplib.utils.putUnsignedByte
 import net.cacheux.nvplib.utils.putUnsignedShort
-import java.nio.ByteBuffer
 
 class T4Update(
     private val bytes: ByteArray
@@ -12,15 +12,13 @@ class T4Update(
         private val UPDATE_COMMAND = 0xD6
     }
 
-    fun toByteArray(): ByteArray {
-        val b = ByteBuffer.allocate(bytes.size + 7)
-        b.putUnsignedByte(CLA)
-        b.putUnsignedByte(UPDATE_COMMAND)
-        b.putUnsignedShort(0)
-        b.putUnsignedByte(bytes.size + 2)
-        b.putUnsignedShort(bytes.size)
-        b.put(bytes)
-
-        return b.array()
-    }
+    fun toByteArray() =
+        ByteArray(bytes.size + 7).writer().apply {
+            putUnsignedByte(CLA)
+            putUnsignedByte(UPDATE_COMMAND)
+            putUnsignedShort(0)
+            putUnsignedByte(bytes.size + 2)
+            putUnsignedShort(bytes.size)
+            writeByteArray(bytes)
+        }.byteArray
 }

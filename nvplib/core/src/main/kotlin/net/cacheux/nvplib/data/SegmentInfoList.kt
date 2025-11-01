@@ -1,19 +1,23 @@
 package net.cacheux.nvplib.data
 
-import net.cacheux.nvplib.utils.getUnsignedShort
-import java.nio.ByteBuffer
+import net.cacheux.bytonio.BinarySerializable
+import net.cacheux.bytonio.utils.ByteArrayReader
+import net.cacheux.bytonio.utils.byteArrayOf
 
 data class SegmentInfoList(
     val items: List<SegmentInfo> = listOf()
-): Encodable() {
+): BinarySerializable {
+    override fun getBinarySize() = 0
+    override fun toByteArray() = byteArrayOf()
+
     companion object {
-        fun fromByteBuffer(buffer: ByteBuffer): SegmentInfoList {
-            val count = buffer.getUnsignedShort()
-            buffer.getUnsignedShort() // length
+        fun fromByteArrayReader(reader: ByteArrayReader): SegmentInfoList {
+            val count = reader.readShort()
+            reader.readShort() // length
 
             return SegmentInfoList(
                 (1..count).map {
-                    SegmentInfo.fromByteBuffer(buffer)
+                    SegmentInfo.fromByteArrayReader(reader)
                 }
             )
         }

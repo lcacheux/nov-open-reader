@@ -1,14 +1,15 @@
 package net.cacheux.nvplib
 
+import net.cacheux.bytonio.BinarySerializable
+import net.cacheux.bytonio.utils.reader
+import net.cacheux.bytonio.utils.writer
 import net.cacheux.nvplib.data.Apdu
+import net.cacheux.nvplib.data.ApduDeserializer
 import net.cacheux.nvplib.data.DataApdu
-import net.cacheux.nvplib.data.Encodable
 import net.cacheux.nvplib.data.PhdPacket
 import net.cacheux.nvplib.data.T4Update
 import net.cacheux.nvplib.utils.decomposeNumber
 import net.cacheux.nvplib.utils.getUnsignedShort
-import net.cacheux.nvplib.utils.wrap
-import java.nio.ByteBuffer
 
 class PhdManager(
     private val dataReader: DataReader
@@ -39,16 +40,15 @@ class PhdManager(
 
         val reads = decomposeNumber(len, MAX_READ_SIZE)
 
-        val fullResult = ByteBuffer.allocate(len)
+        val fullResult = ByteArray(len)
+        val fullResultWriter = fullResult.writer()
 
         reads.forEachIndexed { index, i ->
             val readResult = request(createReadPayload(2 + index * MAX_READ_SIZE, i))
-            fullResult.put(readResult.content)
+            fullResultWriter.writeByteArray(readResult.content.byteArray)
         }
 
-        fullResult.rewind()
-
-        val resultPhd = PhdPacket.fromByteBuffer(fullResult)
+        val resultPhd = PhdPacket.fromByteArrayReader(fullResult.reader())
 
         sequence = resultPhd.seq + 1
 
@@ -60,17 +60,17 @@ class PhdManager(
 
     fun sendApduRequest(apdu: Apdu) = sendRequest(apdu.toByteArray())
 
-    fun <T: Encodable> decodeDataApduRequest(inputApdu: Apdu): T {
+    fun <T: BinarySerializable> decodeDataApduRequest(inputApdu: Apdu): T {
         val byteArray = sendApduRequest(inputApdu)
-        val outputApdu = Apdu.fromByteBuffer(byteArray.wrap())
+        val outputApdu = ApduDeserializer.fromByteArray(byteArray)
         (outputApdu.payload as DataApdu).let { dataApdu ->
             return dataApdu.payload as T
         }
     }
 
-    fun <T: Encodable> decodeRequest(input: ByteArray): T {
+    fun <T: BinarySerializable> decodeRequest(input: ByteArray): T {
         val output = sendRequest(input)
-        val apdu = Apdu.fromByteBuffer(output.wrap())
+        val apdu = ApduDeserializer.fromByteArray(output)
         (apdu.payload as DataApdu).let { dataApdu ->
             return dataApdu.payload as T
         }

@@ -1,14 +1,14 @@
 package net.cacheux.nvplib.data
 
+import net.cacheux.bytonio.utils.reader
+import net.cacheux.bytonio.utils.writer
 import net.cacheux.nvplib.utils.hexToByteArray
 import net.cacheux.nvplib.utils.putUnsignedShort
-import net.cacheux.nvplib.utils.wrap
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.nio.ByteBuffer
 
 class DataApduTest {
     companion object {
@@ -81,8 +81,8 @@ class DataApduTest {
 
     @Test
     fun testDataApduEventReportParsing() {
-        val phd = PhdPacket.fromByteBuffer(ByteBuffer.wrap(APDU_EVENT_REPORT.hexToByteArray()))
-        val resultApdu = Apdu.fromByteBuffer(phd.content.wrap())
+        val phd = PhdPacket.fromByteArrayReader(APDU_EVENT_REPORT.hexToByteArray().reader())
+        val resultApdu = ApduDeserializer.fromByteArray(phd.content)
 
         assertEquals(0x0000e700, resultApdu.at)
         assertTrue(resultApdu.payload is DataApdu)
@@ -102,8 +102,8 @@ class DataApduTest {
 
     @Test
     fun testSpecificationParsing() {
-        val phd = PhdPacket.fromByteBuffer(ByteBuffer.wrap(APDU_SPECIFICATION.hexToByteArray()))
-        val resultApdu = Apdu.fromByteBuffer(phd.content.wrap())
+        val phd = PhdPacket.fromByteArrayReader(APDU_SPECIFICATION.hexToByteArray().reader())
+        val resultApdu = ApduDeserializer.fromByteArray(phd.content)
 
         assertEquals(0x0000e700, resultApdu.at)
         assertTrue(resultApdu.payload is DataApdu)
@@ -120,8 +120,8 @@ class DataApduTest {
 
     @Test
     fun testDataApduSegmentInfoParsing() {
-        val phd = PhdPacket.fromByteBuffer(ByteBuffer.wrap(APDU_SEGMENT_INFO.hexToByteArray()))
-        val resultApdu = Apdu.fromByteBuffer(phd.content.wrap())
+        val phd = PhdPacket.fromByteArrayReader(APDU_SEGMENT_INFO.hexToByteArray().reader())
+        val resultApdu = ApduDeserializer.fromByteArray(phd.content)
         assertEquals(0x0000e700, resultApdu.at)
         assertTrue(resultApdu.payload is DataApdu)
         (resultApdu.payload as DataApdu).let { data ->
@@ -135,8 +135,8 @@ class DataApduTest {
 
     @Test
     fun testDataApduDoseListParsing() {
-        val phd = PhdPacket.fromByteBuffer(ByteBuffer.wrap(APDU_DOSE_LIST.hexToByteArray()))
-        val resultApdu = Apdu.fromByteBuffer(phd.content.wrap())
+        val phd = PhdPacket.fromByteArrayReader(APDU_DOSE_LIST.hexToByteArray().reader())
+        val resultApdu = ApduDeserializer.fromByteArray(phd.content)
         assertEquals(0x0000e700, resultApdu.at)
         assertTrue(resultApdu.payload is DataApdu)
         (resultApdu.payload as DataApdu).let { data ->
@@ -159,10 +159,10 @@ class DataApduTest {
             handle = 0,
             currentTime = 0,
             type = EventReport.MDC_NOTI_CONFIG,
-            data = ByteBuffer.allocate(4).apply {
+            data = ByteArray(4).writer().apply {
                 putUnsignedShort(16394)
                 putUnsignedShort(0)
-            }.array()
+            }.byteArray
         )
 
         val dataApdu = DataApdu(

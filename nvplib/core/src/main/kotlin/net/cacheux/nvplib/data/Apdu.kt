@@ -1,13 +1,26 @@
 package net.cacheux.nvplib.data
 
-import net.cacheux.nvplib.annotations.IsShort
-import net.cacheux.nvplib.utils.getUnsignedShort
-import java.nio.ByteBuffer
+import net.cacheux.bytonio.BinaryDeserializer
+import net.cacheux.bytonio.BinarySerializable
+import net.cacheux.bytonio.annotations.DataObject
+import net.cacheux.bytonio.annotations.Deserializer
+import net.cacheux.bytonio.annotations.EncodeAsShort
+import net.cacheux.bytonio.utils.ByteArrayReader
+import net.cacheux.bytonio.utils.reader
+import net.cacheux.nvplib.data.Apdu.Companion.AARE
+import net.cacheux.nvplib.data.Apdu.Companion.AARQ
+import net.cacheux.nvplib.data.Apdu.Companion.ABRT
+import net.cacheux.nvplib.data.Apdu.Companion.PRST
+import net.cacheux.nvplib.data.Apdu.Companion.RLRE
+import net.cacheux.nvplib.data.Apdu.Companion.RLRQ
+import net.cacheux.nvplib.generated.ApduSerializer
 
+@DataObject
+@Deserializer(ApduDeserializer::class)
 data class Apdu(
-    @IsShort val at: Int,
-    val payload: Encodable
-): Encodable() {
+    @EncodeAsShort val at: Int,
+    val payload: BinarySerializable
+): BinarySerializable {
     companion object {
         const val AARQ = 0xE200
         const val AARE = 0xE300
@@ -15,20 +28,27 @@ data class Apdu(
         const val RLRE = 0xE500
         const val ABRT = 0xE600
         const val PRST = 0xE700
+    }
 
-        fun fromByteBuffer(buffer: ByteBuffer): Apdu {
-            val at = buffer.getUnsignedShort()
-            buffer.getUnsignedShort() // payloadLen
+    override fun getBinarySize() = ApduSerializer.getBinarySize(this)
+    override fun toByteArray() = ApduSerializer.toByteArray(this)
+}
 
-            val payload = when (at) {
-                AARQ, AARE -> ARequest.fromByteBuffer(buffer)
-                PRST -> DataApdu.fromByteBuffer(buffer)
-                RLRQ, RLRE, ABRT -> Encodable()
-                else -> throw IllegalStateException("Unknown at value $at")
-            }
+object ApduDeserializer: BinaryDeserializer<Apdu> {
+    override fun fromByteArray(byteArray: ByteArray) = fromByteArrayReader(byteArray.reader())
 
-            return Apdu(at, payload)
+    override fun fromByteArrayReader(reader: ByteArrayReader): Apdu {
+        val at = reader.readShort()
+        reader.readShort()
+
+        val payload = when (at) {
+            AARQ, AARE -> ARequestDeserializer.fromByteArrayReader(reader)
+            PRST -> DataApduDeserializer.fromByteArrayReader(reader)
+            RLRQ, RLRE, ABRT -> DummyBinarySerializable()
+            else -> throw IllegalStateException("Unknown at value $at")
         }
+
+        return Apdu(at, payload)
     }
 }
 

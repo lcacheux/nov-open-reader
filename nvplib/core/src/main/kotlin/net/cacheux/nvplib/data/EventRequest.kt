@@ -1,11 +1,17 @@
 package net.cacheux.nvplib.data
 
-import net.cacheux.nvplib.annotations.IsInt
-import net.cacheux.nvplib.annotations.IsShort
+import net.cacheux.bytonio.BinarySerializable
+import net.cacheux.bytonio.annotations.DataObject
+import net.cacheux.bytonio.annotations.EncodeAsShort
+import net.cacheux.nvplib.generated.EventRequestSerializer
 
+@DataObject
 data class EventRequest(
-    @IsShort val handle: Int,
-    @IsInt val currentTime: Int,
-    @IsShort val type: Int,
+    @EncodeAsShort val handle: Int,
+    val currentTime: Int,
+    @EncodeAsShort val type: Int,
     val data: ByteArray
-): Encodable()
+): BinarySerializable {
+    override fun getBinarySize() = EventRequestSerializer.getBinarySize(this)
+    override fun toByteArray() = EventRequestSerializer.toByteArray(this)
+}

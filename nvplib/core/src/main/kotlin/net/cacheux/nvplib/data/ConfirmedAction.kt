@@ -1,13 +1,17 @@
 package net.cacheux.nvplib.data
 
-import net.cacheux.nvplib.annotations.IsShort
-import java.nio.ByteBuffer
+import net.cacheux.bytonio.BinarySerializable
+import net.cacheux.bytonio.annotations.DataObject
+import net.cacheux.bytonio.annotations.EncodeAsShort
+import net.cacheux.bytonio.utils.writer
+import net.cacheux.nvplib.generated.ConfirmedActionSerializer
 
-data class ConfirmedAction private constructor(
-    @IsShort val handle: Int,
-    @IsShort val type: Int,
+@DataObject
+data class ConfirmedAction(
+    @EncodeAsShort val handle: Int,
+    @EncodeAsShort val type: Int,
     val bytes: ByteArray
-): Encodable() {
+): BinarySerializable {
     companion object {
         const val STORE_HANDLE = 0x100
         const val ALL_SEGMENTS = 0x0001
@@ -19,7 +23,10 @@ data class ConfirmedAction private constructor(
 
         fun segment(handle: Int, type: Int, segment: Int) = ConfirmedAction(
             handle = handle, type = type,
-            bytes = ByteBuffer.allocate(2).putShort(segment.toShort()).array()
+            bytes = ByteArray(2).writer().apply { writeShort(segment.toShort()) }.byteArray
         )
     }
+
+    override fun getBinarySize() = ConfirmedActionSerializer.getBinarySize(this)
+    override fun toByteArray() = ConfirmedActionSerializer.toByteArray(this)
 }
