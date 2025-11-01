@@ -1,8 +1,8 @@
 package net.cacheux.nvplib
 
-import java.nio.ByteBuffer
+import net.cacheux.bytonio.utils.ByteArrayReader
 
 data class TransceiveResult(
-    val content: ByteBuffer,
+    val content: ByteArrayReader,
     val success: Boolean
 )

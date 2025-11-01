@@ -1,24 +1,23 @@
 package net.cacheux.nvplib.data
 
-import net.cacheux.nvplib.annotations.IsInt
-import net.cacheux.nvplib.utils.getUnsignedInt
-import java.nio.ByteBuffer
+import net.cacheux.bytonio.BinaryDeserializer
+import net.cacheux.bytonio.BinarySerializable
+import net.cacheux.bytonio.annotations.DataObject
+import net.cacheux.bytonio.annotations.Deserializer
+import net.cacheux.bytonio.annotations.EncodeAsInt
+import net.cacheux.bytonio.utils.ByteArrayReader
+import net.cacheux.bytonio.utils.reader
+import net.cacheux.nvplib.generated.InsulinDoseSerializer
 
+@DataObject
+@Deserializer(InsulinDoseDeserializer::class)
 data class InsulinDose(
-    @IsInt val time: Long,
-    @IsInt val units: Int,
-    @IsInt val flags: Int
-): Encodable() {
+    @EncodeAsInt val time: Long,
+    @EncodeAsInt val units: Int,
+    @EncodeAsInt val flags: Int
+): BinarySerializable {
     companion object {
         const val VALID_FLAG = 0x08000000
-
-        fun fromByteBuffer(buffer: ByteBuffer): InsulinDose {
-            val relativeTime = buffer.getUnsignedInt()
-            val units = (buffer.getUnsignedInt() and 0xFFFF)
-            val flags = buffer.getUnsignedInt()
-
-            return InsulinDose(relativeTime.toLong(), units, flags)
-        }
     }
 
     /**
@@ -31,4 +30,19 @@ data class InsulinDose(
         time = (currentTime - ( (relativeTime - time) * 1000 )),
         units = units, flags = flags
     )
+
+    override fun getBinarySize() = InsulinDoseSerializer.getBinarySize(this)
+    override fun toByteArray() = InsulinDoseSerializer.toByteArray(this)
+}
+
+object InsulinDoseDeserializer: BinaryDeserializer<InsulinDose> {
+    override fun fromByteArray(byteArray: ByteArray) = fromByteArrayReader(byteArray.reader())
+
+    override fun fromByteArrayReader(reader: ByteArrayReader): InsulinDose {
+        val relativeTime = reader.readInt()
+        val units = (reader.readInt() and 0xFFFF)
+        val flags = reader.readInt()
+
+        return InsulinDose(relativeTime.toLong(), units, flags)
+    }
 }

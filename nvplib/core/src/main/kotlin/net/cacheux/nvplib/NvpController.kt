@@ -3,6 +3,7 @@ package net.cacheux.nvplib
 import net.cacheux.nvplib.data.ARequest
 import net.cacheux.nvplib.data.AResponse
 import net.cacheux.nvplib.data.Apdu
+import net.cacheux.nvplib.data.ApduDeserializer
 import net.cacheux.nvplib.data.ApoepElement.Companion.APOEP
 import net.cacheux.nvplib.data.DataApdu
 import net.cacheux.nvplib.data.EventReport
@@ -16,8 +17,6 @@ import net.cacheux.nvplib.data.SegmentInfoList
 import net.cacheux.nvplib.data.T4Update
 import net.cacheux.nvplib.data.dataApdu
 import net.cacheux.nvplib.data.eventReport
-import net.cacheux.nvplib.utils.wrap
-import java.nio.ByteBuffer
 
 /**
  * Implement the full pen reading protocol.
@@ -59,16 +58,16 @@ class NvpController(
         stopCondition: StopCondition = noStopCondition
     ): PenResult {
         val lengthResult = dataReader.readResult(createReadPayload(0, 2))
-        val length = lengthResult.content.getShort().toInt()
+        val length = lengthResult.content.readShort().toInt()
 
         val fullRead = dataReader.readResult(createReadPayload(2, length))
 
         val ack = T4Update(byteArrayOf(0xd0.toByte(), 0x00, 0x00))
         dataReader.readResult(ack.toByteArray())
 
-        val phdPacket = PhdPacket.fromByteBuffer(fullRead.content)
+        val phdPacket = PhdPacket.fromByteArrayReader(fullRead.content)
 
-        val apdu = Apdu.fromByteBuffer(ByteBuffer.wrap(phdPacket.content))
+        val apdu = ApduDeserializer.fromByteArray(phdPacket.content)
 
         val aRequest = apdu.payload as ARequest
 
@@ -80,7 +79,7 @@ class NvpController(
         )
 
         val result = phdManager.sendApduRequest(sendApdu)
-        val resultApdu = Apdu.fromByteBuffer(result.wrap())
+        val resultApdu = ApduDeserializer.fromByteArray(result)
         val dataApdu = (resultApdu.payload as DataApdu)
         val configuration = (dataApdu.payload as EventReport).configuration
 
@@ -95,7 +94,7 @@ class NvpController(
             val doseList = mutableListOf<InsulinDose>()
 
             val storageArray = phdManager.sendApduRequest(confirmedAction(dataApdu.invokeId))
-            val storage = Apdu.fromByteBuffer(storageArray.wrap())
+            val storage = ApduDeserializer.fromByteArray(storageArray)
 
             (storage.payload as DataApdu).let { dataApdu ->
                 (dataApdu.payload as SegmentInfoList).let { segmentInfoList ->
@@ -131,8 +130,7 @@ class NvpController(
             invokeId = invokeId,
             segment = segment.instnum
         ))
-        Apdu.fromByteBuffer(xferArray.wrap()) // xfer
-
+        ApduDeserializer.fromByteArray(xferArray) // xfer
         var result = phdManager.sendEmptyRequest()
 
         var currentInstance: Int
@@ -145,7 +143,7 @@ class NvpController(
                 result = phdManager.sendEmptyRequest()
             }
 
-            val logApdu = Apdu.fromByteBuffer(result.wrap())
+            val logApdu = ApduDeserializer.fromByteArray(result)
             logApdu.eventReport()?.let { eventReport ->
                 doseList.addAll(eventReport.insulinDoses)
 

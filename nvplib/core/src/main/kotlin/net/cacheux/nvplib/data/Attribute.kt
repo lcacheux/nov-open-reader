@@ -1,16 +1,20 @@
 package net.cacheux.nvplib.data
 
-import net.cacheux.nvplib.annotations.IsShort
-import net.cacheux.nvplib.utils.getByteArray
-import net.cacheux.nvplib.utils.getUnsignedInt
-import net.cacheux.nvplib.utils.getUnsignedShort
-import net.cacheux.nvplib.utils.wrap
-import java.nio.ByteBuffer
+import net.cacheux.bytonio.BinaryDeserializer
+import net.cacheux.bytonio.annotations.DataObject
+import net.cacheux.bytonio.annotations.Deserializer
+import net.cacheux.bytonio.annotations.IgnoreEncoding
+import net.cacheux.bytonio.utils.ByteArrayReader
+import net.cacheux.bytonio.utils.readInt
+import net.cacheux.bytonio.utils.readShort
+import net.cacheux.bytonio.utils.reader
 
+@DataObject
+@Deserializer(AttributeDeserializer::class)
 data class Attribute(
-    @IsShort val type: Int,
+    val type: Int,
     val data: ByteArray,
-    val value: Int
+    @IgnoreEncoding val value: Int = -1
 ) {
     companion object {
         const val ATTR_SYS_ID = 2436
@@ -40,16 +44,22 @@ data class Attribute(
         const val ATTR_CLEAR_TIMEOUT = 2659
         const val ATTR_TRANSFER_TIMEOUT = 2660
         const val ATTR_ENUM_OBS_VAL_BASIC_BIT_STR = 2662
+    }
+}
 
-        fun fromByteBuffer(buffer: ByteBuffer) : Attribute {
-            val type = buffer.getUnsignedShort()
-            val data = buffer.getByteArray()
-            val value = when (data.size) {
-                2 -> data.wrap().getUnsignedShort()
-                4 -> data.wrap().getUnsignedInt()
-                else -> -1
-            }
-            return Attribute(type, data, value)
+object AttributeDeserializer: BinaryDeserializer<Attribute> {
+    override fun fromByteArray(byteArray: ByteArray) =
+        fromByteArrayReader(byteArray.reader())
+
+    override fun fromByteArrayReader(reader: ByteArrayReader): Attribute {
+        val type = reader.readShort()
+        val len = reader.readShort()
+        val data = reader.readByteArray(len)
+        val value = when (data.size) {
+            2 -> data.readShort()
+            4 -> data.readInt()
+            else -> -1
         }
+        return Attribute(type, data, value)
     }
 }

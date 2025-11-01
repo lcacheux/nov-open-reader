@@ -1,6 +1,6 @@
 package net.cacheux.nvplib
 
-import java.nio.ByteBuffer
+import net.cacheux.bytonio.utils.reader
 import kotlin.experimental.and
 
 /**
@@ -27,13 +27,12 @@ fun DataReader.readResult(command: ByteArray): TransceiveResult {
     onDataSent(command)
     val data = readData(command)
     onDataReceived(data)
-    val buffer = ByteBuffer.wrap(data)
+    val buffer = data.reader()
     val dataSize = buffer.remaining() - 2
-    val result = ByteArray(dataSize)
-    buffer.get(result, 0, dataSize)
+    val result = buffer.readByteArray(dataSize)
 
     return TransceiveResult(
-        content = ByteBuffer.wrap(result),
-        success = (buffer.getShort() and 0xffff.toShort()) == NvpController.COMMAND_COMPLETED
+        content = result.reader(),
+        success = (buffer.readShort().toShort() and 0xffff.toShort()) == NvpController.COMMAND_COMPLETED
     )
 }

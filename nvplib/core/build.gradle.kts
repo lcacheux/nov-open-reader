@@ -3,6 +3,7 @@ plugins {
     id("maven-publish")
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.dokka)
+    alias(libs.plugins.ksp)
     signing
 }
 
@@ -14,8 +15,14 @@ java {
     withSourcesJar()
 }
 
+ksp {
+    arg("bytonio.packageName", "net.cacheux.nvplib.generated")
+    arg("bytonio.dataSizeFormat", "short")
+}
+
 dependencies {
-    implementation(kotlin("reflect"))
+    api(libs.bytonio.core)
+    ksp(libs.bytonio.processor)
 
     testImplementation(libs.junit)
     testImplementation(project(":nvplib:testing"))

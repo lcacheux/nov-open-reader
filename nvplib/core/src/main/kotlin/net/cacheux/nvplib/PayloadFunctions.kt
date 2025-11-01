@@ -1,5 +1,6 @@
 package net.cacheux.nvplib
 
+import net.cacheux.bytonio.utils.writer
 import net.cacheux.nvplib.data.Apdu
 import net.cacheux.nvplib.data.Apdu.Companion.PRST
 import net.cacheux.nvplib.data.ArgumentsSimple
@@ -16,7 +17,6 @@ import net.cacheux.nvplib.data.EventReport.Companion.MDC_NOTI_SEGMENT_DATA
 import net.cacheux.nvplib.data.EventRequest
 import net.cacheux.nvplib.utils.putUnsignedByte
 import net.cacheux.nvplib.utils.putUnsignedShort
-import java.nio.ByteBuffer
 
 fun applicationSelect() =
     createTranceivePayload(NvpController.BY_NAME, 0, NvpController.NDEF_TAG_APPLICATION_SELECT, true)
@@ -28,26 +28,26 @@ fun ndefSelect() =
     createTranceivePayload(0, NvpController.FIRST_ONLY, NvpController.NDEF_SELECT)
 
 fun createReadPayload(offset: Int, length: Int): ByteArray {
-    return ByteBuffer.allocate(5).apply {
+    return ByteArray(5).writer().apply {
         putUnsignedByte(NvpController.CLA)
         putUnsignedByte(NvpController.INS_RB)
         putUnsignedShort(offset)
         putUnsignedByte(length)
-    }.array()
+    }.byteArray
 }
 
 private fun createTranceivePayload(p1: Int, p2: Int, data: ByteArray, le: Boolean = false): ByteArray {
-    return ByteBuffer.allocate(data.size + if (le) 6 else 5).apply {
+    return ByteArray(data.size + if (le) 6 else 5).writer().apply {
         putUnsignedByte(NvpController.CLA)
         putUnsignedByte(NvpController.INS_SL)
         putUnsignedByte(p1)
         putUnsignedByte(p2)
         putUnsignedByte(data.size)
-        put(data)
+        writeByteArray(data)
         if (le) {
             putUnsignedByte(0x00)
         }
-    }.array()
+    }.byteArray
 }
 
 /**
@@ -64,10 +64,10 @@ fun retrieveInformation(invokeId: Int, config: Configuration) =
                 handle = 0,
                 currentTime = 0,
                 type = MDC_NOTI_CONFIG,
-                data = ByteBuffer.allocate(4).apply {
+                data = ByteArray(4).writer().apply {
                     putUnsignedShort(config.id)
                     putUnsignedShort(0)
-                }.array()
+                }.byteArray
             )
         )
     )
@@ -125,7 +125,7 @@ fun confirmedXfer(invokeId: Int, data: ByteArray) =
     )
 
 fun eventRequestData(instance: Int, index: Int, count: Int, confirmed: Boolean): ByteArray =
-    ByteBuffer.allocate(12).apply {
+    ByteArray(12).writer().apply {
         putUnsignedShort(instance)
         putUnsignedShort(0)
         putUnsignedShort(index)
@@ -133,4 +133,4 @@ fun eventRequestData(instance: Int, index: Int, count: Int, confirmed: Boolean):
         putUnsignedShort(count)
         putUnsignedByte(0x00) // block
         putUnsignedByte(if (confirmed) 0x80 else 0)
-    }.array()
+    }.byteArray
