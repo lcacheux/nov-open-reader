@@ -58,7 +58,7 @@ data class PhdPacket(
             if (hasId && header != null) {
                 writeByteArray(header)
             }
-            writeByteArray("PHD".toByteArray())
+            writeByteArray("PHD".encodeToByteArray())
             putUnsignedByte(seq and 0x0F or 0x80 or chk)
             if (ilen > 0) {
                 writeByteArray(content)

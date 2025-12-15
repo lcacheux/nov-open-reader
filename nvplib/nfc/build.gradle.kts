@@ -1,13 +1,16 @@
 plugins {
-    id("maven-publish")
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.dokka)
-    signing
+    alias(libs.plugins.mavenPublish)
 }
 
+val nvplibVersion: String? by project
+group = "net.cacheux.nvplib"
+version = nvplibVersion ?: "unknown"
+
 kotlin {
-    jvmToolchain(libs.versions.java.get().toInt())
+    jvmToolchain(libs.versions.nvplibJava.get().toInt())
 }
 
 android {
@@ -30,81 +33,40 @@ android {
             )
         }
     }
-
-    publishing {
-        singleVariant("release") {}
-    }
 }
 
 dependencies {
     implementation(project(":nvplib:core"))
 }
 
-tasks.register<Jar>("dokkaHtmlJar") {
-    dependsOn(tasks.dokkaHtml)
-    from(tasks.dokkaHtml.flatMap { it.outputDirectory })
-    archiveClassifier.set("html-docs")
-}
+mavenPublishing {
+    publishToMavenCentral()
 
-tasks.register<Jar>("dokkaJavadocJar") {
-    dependsOn(tasks.dokkaJavadoc)
-    from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
-    archiveClassifier.set("javadoc")
-}
+    signAllPublications()
 
-publishing {
-    repositories {
-        maven {
-            url = uri(layout.buildDirectory.dir("release"))
-        }
-    }
+    coordinates(group.toString(), "nvplib-nfc-android", version.toString())
 
-    publications {
-        create<MavenPublication>("mavenNfc") {
-            groupId = "net.cacheux.nvplib"
-            artifactId = "nvplib-nfc"
-            version = "0.1.2"
-            afterEvaluate {
-                from(components["release"])
-                artifact(tasks["dokkaHtmlJar"])
-                artifact(tasks["dokkaJavadocJar"])
-            }
-
-            pom {
-                name = "NVP Lib NFC"
-                description = "Android NFC implementation to read data from Novopen insulin pens"
-                url = "https://github.com/lcacheux/nov-open-reader"
-                licenses {
-                    license {
-                        name = "The Apache License, Version 2.0"
-                        url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
-                    }
-                }
-                developers {
-                    developer {
-                        id = "lcacheux"
-                        name = "Leo Cacheux"
-                        email = "leo@cacheux.net"
-                    }
-                }
-                scm {
-                    connection = "scm:git:https://github.com/lcacheux/nov-open-reader.git"
-                    developerConnection = "scm:git:ssh://github.com/lcacheux/nov-open-reader.git"
-                    url = "https://github.com/lcacheux/nov-open-reader"
-                }
+    pom {
+        name = "NVP Lib NFC"
+        description = "Android NFC implementation to read data from Novopen insulin pens"
+        url = "https://github.com/lcacheux/nov-open-reader"
+        licenses {
+            license {
+                name = "The Apache License, Version 2.0"
+                url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
             }
         }
+        developers {
+            developer {
+                id = "lcacheux"
+                name = "Leo Cacheux"
+                email = "leo@cacheux.net"
+            }
+        }
+        scm {
+            connection = "scm:git:https://github.com/lcacheux/nov-open-reader.git"
+            developerConnection = "scm:git:ssh://github.com/lcacheux/nov-open-reader.git"
+            url = "https://github.com/lcacheux/nov-open-reader"
+        }
     }
-}
-
-val signingIfAvailable: (Publication) -> Unit by project
-signingIfAvailable(publishing.publications.getByName("mavenNfc"))
-
-tasks.create<Zip>("bundleZip") {
-    dependsOn("publish")
-    from(layout.buildDirectory.dir("release").get()) {
-        exclude("**/*.asc.*")
-    }
-    archiveFileName = "nvplib-nfc.zip"
-    destinationDirectory = layout.buildDirectory.dir("bundle").get()
 }

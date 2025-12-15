@@ -8,6 +8,7 @@ import net.cacheux.bytonio.annotations.Deserializer
 import net.cacheux.bytonio.annotations.EncodeAsShort
 import net.cacheux.bytonio.annotations.Serializer
 import net.cacheux.bytonio.utils.ByteArrayReader
+import net.cacheux.bytonio.utils.ByteArrayWriter
 import net.cacheux.bytonio.utils.reader
 import net.cacheux.nvplib.data.DataApdu.Companion.CONFIRMED_ACTION_CHOSEN
 import net.cacheux.nvplib.data.DataApdu.Companion.CONFIRMED_EVENT_REPORT_CHOSEN
@@ -16,7 +17,6 @@ import net.cacheux.nvplib.data.DataApdu.Companion.MDC_ACT_SEG_GET_INFO
 import net.cacheux.nvplib.data.DataApdu.Companion.MDC_ACT_SEG_TRIG_XFER
 import net.cacheux.nvplib.data.DataApdu.Companion.SGET_CHOSEN
 import net.cacheux.nvplib.generated.TriggerSegmentDataXferDeserializer
-import java.nio.ByteBuffer
 
 @DataObject
 @Serializer(DataApduSerializer::class)
@@ -38,24 +38,9 @@ data class DataApdu(
         const val MDC_ACT_SEG_TRIG_XFER = 0x0C1C
     }
 
-    override fun getBinarySize(): Int {
-        return 6 + (payload?.let { it.getBinarySize() + 2 } ?: 0)
-    }
+    override fun getBinarySize() = DataApduSerializer.getBinarySize(this)
 
-    override fun toByteArray(): ByteArray {
-        val payloadSize = (payload?.let {
-            it.getBinarySize() + 2
-        } ?: 0)
-        return ByteBuffer.allocate(getBinarySize()).apply {
-            putShort((payloadSize + 4).toShort())
-            putShort(invokeId.toShort())
-            putShort(dchoice.toShort())
-            payload?.let {
-                putShort(payload.getBinarySize().toShort())
-                put(payload.toByteArray())
-            }
-        }.array()
-    }
+    override fun toByteArray() = DataApduSerializer.toByteArray(this)
 }
 
 object DataApduSerializer: BinarySerializer<DataApdu> {
@@ -67,15 +52,15 @@ object DataApduSerializer: BinarySerializer<DataApdu> {
         val payloadSize = (data.payload?.let {
             it.getBinarySize() + 2
         } ?: 0)
-        return ByteBuffer.allocate(data.getBinarySize()).apply {
-            putShort((payloadSize + 4).toShort())
-            putShort(data.invokeId.toShort())
-            putShort(data.dchoice.toShort())
+        return ByteArrayWriter(ByteArray(size = data.getBinarySize())).apply {
+            writeShort((payloadSize + 4).toShort())
+            writeShort(data.invokeId.toShort())
+            writeShort(data.dchoice.toShort())
             data.payload?.let {
-                putShort(data.payload.getBinarySize().toShort())
-                put(data.payload.toByteArray())
+                writeShort(data.payload.getBinarySize().toShort())
+                writeByteArray(data.payload.toByteArray())
             }
-        }.array()
+        }.byteArray
     }
 }
 

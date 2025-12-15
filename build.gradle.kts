@@ -43,3 +43,9 @@ sonar {
         property("sonar.organization", "lcacheux")
     }
 }
+
+val nvplibVersion: String? by extra {
+    providers.exec {
+        commandLine("git", "describe", "--tags", "--match", "nvplib-*")
+    }.standardOutput.asText.get().trim().removePrefix("nvplib-")
+}

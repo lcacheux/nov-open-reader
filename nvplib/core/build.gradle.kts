@@ -1,18 +1,57 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
+
 plugins {
-    id("java-library")
-    id("maven-publish")
-    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.dokka)
     alias(libs.plugins.ksp)
-    signing
+    alias(libs.plugins.mavenPublish)
 }
+
+val nvplibVersion: String? by project
+group = "net.cacheux.nvplib"
+version = nvplibVersion ?: "unknown"
 
 kotlin {
-    jvmToolchain(libs.versions.java.get().toInt())
-}
+    jvmToolchain(libs.versions.nvplibJava.get().toInt())
 
-java {
-    withSourcesJar()
+    jvm()
+
+    val xcfName = "bytonioKit"
+
+    iosX64 {
+        binaries.framework {
+            baseName = xcfName
+        }
+    }
+
+    iosArm64 {
+        binaries.framework {
+            baseName = xcfName
+        }
+    }
+
+    iosSimulatorArm64 {
+        binaries.framework {
+            baseName = xcfName
+        }
+    }
+
+    sourceSets {
+        commonMain {
+            kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
+            dependencies {
+                api(libs.bytonio.core)
+            }
+        }
+
+        jvmTest {
+            dependencies {
+                implementation(libs.junit)
+                implementation(project(":nvplib:testing"))
+                implementation(project(":utils"))
+            }
+        }
+    }
 }
 
 ksp {
@@ -21,79 +60,47 @@ ksp {
 }
 
 dependencies {
-    api(libs.bytonio.core)
-    ksp(libs.bytonio.processor)
-
-    testImplementation(libs.junit)
-    testImplementation(project(":nvplib:testing"))
-    testImplementation(project(":utils"))
+    add("kspCommonMainMetadata", libs.bytonio.processor)
 }
 
-tasks.register<Jar>("dokkaHtmlJar") {
-    dependsOn(tasks.dokkaHtml)
-    from(tasks.dokkaHtml.flatMap { it.outputDirectory })
-    archiveClassifier.set("html-docs")
-}
+mavenPublishing {
+    publishToMavenCentral()
 
-tasks.register<Jar>("dokkaJavadocJar") {
-    dependsOn(tasks.dokkaJavadoc)
-    from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
-    archiveClassifier.set("javadoc")
-}
+    signAllPublications()
 
-publishing {
-    repositories {
-        maven {
-            url = uri(layout.buildDirectory.dir("release"))
+    coordinates(group.toString(), "nvplib-core", version.toString())
+
+    pom {
+        name = "NVP Lib Core"
+        description = "Core library to read data from Novopen insulin pens"
+        url = "https://github.com/lcacheux/nov-open-reader"
+        licenses {
+            license {
+                name = "The Apache License, Version 2.0"
+                url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
+            }
         }
-    }
-
-    publications {
-        create<MavenPublication>("mavenCore") {
-            groupId = "net.cacheux.nvplib"
-            artifactId = "nvplib-core"
-            version = "0.1.2"
-            afterEvaluate {
-                from(components["java"])
-                artifact(tasks["dokkaHtmlJar"])
-                artifact(tasks["dokkaJavadocJar"])
+        developers {
+            developer {
+                id = "lcacheux"
+                name = "Leo Cacheux"
+                email = "leo@cacheux.net"
             }
-
-            pom {
-                name = "NVP Lib Core"
-                description = "Core library to read data from Novopen insulin pens"
-                url = "https://github.com/lcacheux/nov-open-reader"
-                licenses {
-                    license {
-                        name = "The Apache License, Version 2.0"
-                        url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
-                    }
-                }
-                developers {
-                    developer {
-                        id = "lcacheux"
-                        name = "Leo Cacheux"
-                        email = "leo@cacheux.net"
-                    }
-                }
-                scm {
-                    connection = "scm:git:https://github.com/lcacheux/nov-open-reader.git"
-                    developerConnection = "scm:git:ssh://github.com/lcacheux/nov-open-reader.git"
-                    url = "https://github.com/lcacheux/nov-open-reader"
-                }
-            }
+        }
+        scm {
+            connection = "scm:git:https://github.com/lcacheux/nov-open-reader.git"
+            developerConnection = "scm:git:ssh://github.com/lcacheux/nov-open-reader.git"
+            url = "https://github.com/lcacheux/nov-open-reader"
         }
     }
 }
 
-val signingIfAvailable: (Publication) -> Unit by project
-signingIfAvailable(publishing.publications.getByName("mavenCore"))
-
-tasks.create<Zip>("bundleZip") {
-    dependsOn("publish")
-    from(layout.buildDirectory.dir("release").get()) {
-        exclude("**/*.asc.*")
+afterEvaluate {
+    tasks.withType(KotlinCompilationTask::class).configureEach {
+        if (name != "kspCommonMainKotlinMetadata") {
+            dependsOn("kspCommonMainKotlinMetadata")
+        }
     }
-    archiveFileName = "nvplib-core.zip"
-    destinationDirectory = layout.buildDirectory.dir("bundle").get()
+    tasks.findByName("sourcesJar")?.dependsOn("kspCommonMainKotlinMetadata")
 }
+

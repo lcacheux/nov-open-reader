@@ -20,7 +20,7 @@ fun ByteArrayReader.getUnsignedByte(): Int {
 }
 
 fun ByteArrayReader.getIndexedString() =
-    String(readByteArray(getUnsignedShort())).replace(
+    readByteArray(getUnsignedShort()).decodeToString().replace(
         "\u0000",
         ""
     )

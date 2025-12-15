@@ -2,7 +2,10 @@ package net.cacheux.nvplib.data
 
 import net.cacheux.bytonio.annotations.IgnoreEncoding
 import net.cacheux.bytonio.utils.ByteArrayReader
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 data class EventReport(
     val handle: Int,
     val relativeTime: Int,
@@ -32,7 +35,7 @@ data class EventReport(
                     reader.readShort() // status
                     reader.readShort() // bcount
 
-                    val currentTime = System.currentTimeMillis()
+                    val currentTime = Clock.System.now().toEpochMilliseconds()
 
                     repeat(count) {
                         InsulinDoseDeserializer.fromByteArrayReader(reader).let {

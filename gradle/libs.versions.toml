@@ -1,19 +1,20 @@
 [versions]
 java = "21"
+nvplibJava = "8"
 android-minSdk = "24"
 android-compileSdk = "36"
 agp = "8.13.2"
-compose-plugin="1.9.0"
-hilt = "2.57.1"
-kotlin = "2.1.21"
+compose-plugin="1.9.3"
+hilt = "2.57.2"
+kotlin = "2.2.20"
 coroutines = "1.10.2"
-room = "2.8.2"
-sqlite = "2.6.1"
-androidx-datastore = "1.1.7"
-bytonio = "0.0.1"
+room = "2.8.4"
+sqlite = "2.6.2"
+androidx-datastore = "1.2.0"
+bytonio = "0.0.3"
 
 [plugins]
-ksp = { id = "com.google.devtools.ksp", version = "2.1.21-2.0.1" }
+ksp = { id = "com.google.devtools.ksp", version = "2.2.20-2.0.4" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
@@ -23,20 +24,21 @@ hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 room = { id = "androidx.room", version.ref = "room" }
 jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-dokka = { id = "org.jetbrains.dokka", version = "2.0.0" }
+dokka = { id = "org.jetbrains.dokka", version = "2.1.0" }
 sonarqube = { id = "org.sonarqube", version = "6.3.1.5724" }
+mavenPublish = { id = "com.vanniktech.maven.publish", version = "0.35.0" }
 
 [libraries]
-colorpicker-compose = { module = "com.github.skydoves:colorpicker-compose", version = "1.1.2" }
+colorpicker-compose = { module = "com.github.skydoves:colorpicker-compose", version = "1.1.3" }
 filekit-compose = { module = "io.github.vinceglb:filekit-compose", version = "0.8.8" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
-androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.11.0" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.12.1" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version = "androidx-datastore" }
 androidx-datastore-core = { module = "androidx.datastore:datastore-core", version.ref = "androidx-datastore" }
-androidx-lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version = "2.9.3" }
+androidx-lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version = "2.9.6" }
 
 # Room
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
@@ -60,4 +62,4 @@ androidx-test-runner = { group = "androidx.test", name = "runner", version="1.7.
 mockito-android = { group = "org.mockito", name = "mockito-android", version = "5.20.0" }
 mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version = "6.1.0" }
 turbine = { group = "app.cash.turbine", name = "turbine", version = "1.2.1" }
-androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version = "1.9.3" }
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version = "1.10.0" }

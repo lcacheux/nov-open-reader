@@ -8,7 +8,10 @@ import net.cacheux.bytonio.annotations.EncodeAsInt
 import net.cacheux.bytonio.utils.ByteArrayReader
 import net.cacheux.bytonio.utils.reader
 import net.cacheux.nvplib.generated.InsulinDoseSerializer
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 @DataObject
 @Deserializer(InsulinDoseDeserializer::class)
 data class InsulinDose(
@@ -26,7 +29,7 @@ data class InsulinDose(
      * @param relativeTime Should be the value parsed with [EventReport]
      * @param currentTime Current time in millis. Should be System.currentTimeMillis()
      */
-    fun withUtcTime(relativeTime: Int, currentTime: Long = System.currentTimeMillis()) = InsulinDose(
+    fun withUtcTime(relativeTime: Int, currentTime: Long = Clock.System.now().toEpochMilliseconds()) = InsulinDose(
         time = (currentTime - ( (relativeTime - time) * 1000 )),
         units = units, flags = flags
     )
