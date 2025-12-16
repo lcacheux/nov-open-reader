@@ -18,7 +18,7 @@ class MainScreenViewModel @Inject constructor(
     preferencesRepository: PreferencesRepository,
 ): BaseMainScreenViewModel(
     repository, storageRepository,
-    DoseListUseCase( storageRepository, preferencesRepository),
+    DoseListUseCase(storageRepository, preferencesRepository),
 ) {
     init {
         repository.registerOnDataReceivedCallback { result ->

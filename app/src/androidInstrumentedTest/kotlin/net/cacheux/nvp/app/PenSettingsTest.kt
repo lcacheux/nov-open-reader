@@ -99,6 +99,11 @@ class PenSettingsTest {
 
             assertHaveTexts("ABCD1234", "ABCD5678")
 
+            onNodeWithText("ABCD5678").performClick()
+            waitForIdle()
+
+            openDrawer()
+
             onNodeWithText(getString(Res.string.pen_settings)).performClick()
             waitForIdle()
 

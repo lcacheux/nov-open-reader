@@ -31,6 +31,18 @@ open class BaseMainScreenViewModel (
     private val doseListUseCase: DoseListUseCase,
     protected val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 ): ViewModel() {
+
+    init {
+        // When a pen is deleted, ensure that the current pen is unset
+        coroutineScope.launch {
+            getPenList().collect { penList ->
+                if (penList.find { it.serial == currentPen.value } == null) {
+                    setCurrentPen(null)
+                }
+            }
+        }
+    }
+
     fun getPenList() = storageRepository.getPenList()
 
     protected val isReading = MutableStateFlow(false)
