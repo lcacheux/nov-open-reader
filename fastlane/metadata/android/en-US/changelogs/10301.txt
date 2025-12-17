@@ -1,0 +1,1 @@
+Fix a crash when a pen is deleted while being selected

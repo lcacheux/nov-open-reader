@@ -1,0 +1,1 @@
+Correction d'un crash lorsqu'un stylo est supprimé en étant sélectionné
