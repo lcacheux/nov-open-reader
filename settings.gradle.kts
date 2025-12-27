@@ -5,6 +5,7 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -30,3 +31,5 @@ include(":nvplib:testing")
 include(":storage:room")
 include(":storage:storage-interface")
 
+include(":nvplib:nfc-desktop")
+include(":nvplib:nfc-desktop-smartcardio")

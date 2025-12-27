@@ -75,6 +75,7 @@ kotlin {
 
         val desktopMain by getting {
             dependencies {
+                implementation(project(":nvplib:nfc-desktop"))
                 implementation(project(":nvplib:testing"))
                 implementation(compose.desktop.currentOs)
                 implementation(libs.kotlinx.coroutines.swing)

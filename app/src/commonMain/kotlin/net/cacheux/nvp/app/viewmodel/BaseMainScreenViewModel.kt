@@ -22,6 +22,8 @@ import net.cacheux.nvp.ui.ui.generated.resources.Res
 import net.cacheux.nvp.ui.ui.generated.resources.csv_loaded
 import net.cacheux.nvp.ui.ui.generated.resources.loading_csv
 import net.cacheux.nvp.ui.ui.generated.resources.no_csv_data
+import net.cacheux.nvp.ui.ui.generated.resources.reading_pen
+import net.cacheux.nvp.ui.ui.generated.resources.reading_pen_error
 import org.jetbrains.compose.resources.StringResource
 import java.io.InputStream
 
@@ -31,7 +33,6 @@ open class BaseMainScreenViewModel (
     private val doseListUseCase: DoseListUseCase,
     protected val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 ): ViewModel() {
-
     init {
         // When a pen is deleted, ensure that the current pen is unset
         coroutineScope.launch {
@@ -41,6 +42,28 @@ open class BaseMainScreenViewModel (
                 }
             }
         }
+
+        repository.registerOnDataReceivedCallback { result ->
+            coroutineScope.launch {
+                storageRepository.saveResult(result)
+            }
+        }
+
+        repository.registerCallbacks(
+            PenInfoRepository.Callbacks(
+                onReadStart = {
+                    isReading.value = true
+                    readMessage.value = Res.string.reading_pen
+                },
+                onReadStop = {
+                    isReading.value = false
+                    readMessage.value = null
+                },
+                onError = { e ->
+                    isReading.value = false
+                    readMessage.value = Res.string.reading_pen_error
+                }
+            ))
     }
 
     fun getPenList() = storageRepository.getPenList()

@@ -9,9 +9,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import net.cacheux.nvp.app.repository.NfcPenInfoRepository
 import net.cacheux.nvp.app.repository.PreferencesRepositoryImpl
 import net.cacheux.nvp.app.repository.StorageRepository
-import net.cacheux.nvp.app.repository.TestPenInfoRepository
 import net.cacheux.nvp.app.ui.ScreenWrapper
 import net.cacheux.nvp.app.usecase.DoseListUseCase
 import net.cacheux.nvp.app.utils.csvFilename
@@ -33,7 +33,7 @@ val storageRepository = StorageRepository(RoomDoseStorage(
 val preferencesRepository = PreferencesRepositoryImpl()
 
 val mainScreenViewModel = MainScreenViewModel(
-    TestPenInfoRepository(),
+    NfcPenInfoRepository(),
     doseListUseCase = DoseListUseCase(storageRepository, preferencesRepository),
     storageRepository = storageRepository
 )

@@ -12,13 +12,14 @@ import net.cacheux.nvplib.NvpController
 import net.cacheux.nvplib.testing.TestingDataReader
 
 class MainScreenViewModel(
-    private val repository: PenInfoRepository,
+    repository: PenInfoRepository,
     private val storageRepository: StorageRepository,
-    private val doseListUseCase: DoseListUseCase,
+    doseListUseCase: DoseListUseCase,
     coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 ): BaseMainScreenViewModel(
     repository, storageRepository, doseListUseCase, coroutineScope
 ) {
+
     fun loadFromFile(file: PlatformFile) {
         coroutineScope.launch {
             logDebug { "loadFromFile" }
