@@ -93,6 +93,7 @@ fun ScreenWrapper(
             SettingsScreen(
                 params = SettingsScreenParams(
                     onBack = { currentScreen = CurrentScreen.Main },
+                    theme = settingsViewModel.theme.asStateWrapper(),
                     groupDose = settingsViewModel.groupEnabled.asStateWrapper(),
                     groupDelay = settingsViewModel.groupDelay.asStateWrapper(),
                     autoIgnoreEnabled = settingsViewModel.autoIgnoreEnabled.asStateWrapper(),

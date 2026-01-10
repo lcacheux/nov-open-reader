@@ -1,3 +1,7 @@
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.room.Room
@@ -12,6 +16,7 @@ import kotlinx.coroutines.launch
 import net.cacheux.nvp.app.repository.PreferencesRepositoryImpl
 import net.cacheux.nvp.app.repository.StorageRepository
 import net.cacheux.nvp.app.repository.TestPenInfoRepository
+import net.cacheux.nvp.app.repository.Theme
 import net.cacheux.nvp.app.ui.ScreenWrapper
 import net.cacheux.nvp.app.usecase.DoseListUseCase
 import net.cacheux.nvp.app.utils.csvFilename
@@ -20,6 +25,7 @@ import net.cacheux.nvp.app.viewmodel.BasePenSettingsViewModel
 import net.cacheux.nvp.app.viewmodel.BaseSettingsViewModel
 import net.cacheux.nvp.app.viewmodel.MainScreenViewModel
 import net.cacheux.nvp.ui.MainDropdownMenuActions
+import net.cacheux.nvp.ui.asStateWrapper
 import net.cacheux.nvplib.storage.room.NvpDatabase
 import net.cacheux.nvplib.storage.room.RoomDoseStorage
 
@@ -71,27 +77,38 @@ fun main() = application {
             // TODO feedback message
         }
 
-        ScreenWrapper(
-            mainScreenViewModel = mainScreenViewModel,
-            penSettingsViewModel = penSettingsViewModel,
-            settingsViewModel = settingsViewModel,
+        val isDark = when(settingsViewModel.theme.asStateWrapper().value) {
+            Theme.THEME_LIGHT -> false
+            Theme.THEME_DARK -> true
+            Theme.THEME_SYSTEM -> isSystemInDarkTheme()
+            else -> false
+        }
 
-            dropdownMenuActions = MainDropdownMenuActions(
-                onLoadingClick = { loadRawDataPicker.launch() },
-                onExportCsv = {
-                    ioScope.launch {
-                        saveCsvPicker.launch(
-                            baseName = csvFilename(mainScreenViewModel.getCurrentPen().value),
-                            extension = "csv",
-                            bytes = mainScreenViewModel.flatDoseList.first().toCsv().toByteArray()
-                        )
-                    }
-                },
-                onImportCsv = { loadCsvPicker.launch() },
-                onInitDemo = { mainScreenViewModel.initDemoData() }
-            ),
+        MaterialTheme(
+            colorScheme = if (isDark) darkColorScheme() else lightColorScheme()
+        ) {
+            ScreenWrapper(
+                mainScreenViewModel = mainScreenViewModel,
+                penSettingsViewModel = penSettingsViewModel,
+                settingsViewModel = settingsViewModel,
 
-            demoVersion = true
-        )
+                dropdownMenuActions = MainDropdownMenuActions(
+                    onLoadingClick = { loadRawDataPicker.launch() },
+                    onExportCsv = {
+                        ioScope.launch {
+                            saveCsvPicker.launch(
+                                baseName = csvFilename(mainScreenViewModel.getCurrentPen().value),
+                                extension = "csv",
+                                bytes = mainScreenViewModel.flatDoseList.first().toCsv().toByteArray()
+                            )
+                        }
+                    },
+                    onImportCsv = { loadCsvPicker.launch() },
+                    onInitDemo = { mainScreenViewModel.initDemoData() }
+                ),
+
+                demoVersion = true
+            )
+        }
     }
 }

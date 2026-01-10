@@ -5,9 +5,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.Modifier
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -17,6 +20,7 @@ import kotlinx.coroutines.launch
 import net.cacheux.nvp.app.BuildConfig.DEMO_VERSION
 import net.cacheux.nvp.app.repository.ActivityRequirer
 import net.cacheux.nvp.app.repository.PenInfoRepository
+import net.cacheux.nvp.app.repository.Theme
 import net.cacheux.nvp.app.ui.ScreenWrapper
 import net.cacheux.nvp.app.utils.csvFilename
 import net.cacheux.nvp.app.utils.toCsv
@@ -24,6 +28,7 @@ import net.cacheux.nvp.app.viewmodel.MainScreenViewModel
 import net.cacheux.nvp.app.viewmodel.PenSettingsViewModel
 import net.cacheux.nvp.app.viewmodel.SettingsViewModel
 import net.cacheux.nvp.ui.MainDropdownMenuActions
+import net.cacheux.nvp.ui.asStateWrapper
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -40,7 +45,16 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            MaterialTheme {
+            val isDark = when(settingsViewModel.theme.asStateWrapper().value) {
+                Theme.THEME_LIGHT -> false
+                Theme.THEME_DARK -> true
+                Theme.THEME_SYSTEM -> isSystemInDarkTheme()
+                else -> false
+            }
+
+            MaterialTheme(
+                colorScheme = if (isDark) darkColorScheme() else lightColorScheme()
+            ) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background

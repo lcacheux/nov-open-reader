@@ -29,6 +29,10 @@
 
     <!-- Settings screen -->
     <string name="settings">Paramètres</string>
+    <string name="theme">Thème</string>
+    <string name="theme_light">Clair</string>
+    <string name="theme_dark">Sombre</string>
+    <string name="theme_system">Système</string>
     <string name="group_doses">Grouper les doses</string>
     <string name="group_doses_details">Afficher les doses dans l'intervalle spécifié comme une seule</string>
     <string name="group_delay">Intervalle de groupe</string>

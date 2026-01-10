@@ -5,8 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
@@ -102,6 +100,7 @@ fun MainScreen(
         }
     ) {
         Scaffold(
+            modifier = Modifier.background(MaterialTheme.colorScheme.surfaceBright),
             topBar = {
                 CustomTopBar(
                     onNavClick = {
@@ -147,8 +146,8 @@ fun CustomTopBar(
 
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            titleContentColor = MaterialTheme.colorScheme.primary,
+            containerColor = MaterialTheme.colorScheme.primary,
+            titleContentColor = MaterialTheme.colorScheme.onPrimary,
         ),
         title = {
             Text(text = stringResource(Res.string.app_name))
@@ -160,6 +159,7 @@ fun CustomTopBar(
             ) {
                 Icon(
                     imageVector = Icons.Filled.Menu,
+                    tint = MaterialTheme.colorScheme.onPrimary,
                     contentDescription = stringResource(Res.string.open_drawer)
                 )
             }
@@ -168,6 +168,7 @@ fun CustomTopBar(
             IconButton(onClick = { dropdownOpened = true }) {
                 Icon(
                     imageVector = Icons.Filled.MoreVert,
+                    tint = MaterialTheme.colorScheme.onPrimary,
                     contentDescription = stringResource(Res.string.open_menu)
                 )
             }
@@ -180,15 +181,6 @@ fun CustomTopBar(
             )
         },
     )
-}
-
-@Composable
-fun ItemList(items: List<DoseGroup>, onDoseClick: (DoseGroup) -> Unit = {}) {
-    LazyColumn {
-        items(items) { item ->
-            DoseDisplay(dose = item, onClick = onDoseClick)
-        }
-    }
 }
 
 @Composable
@@ -210,12 +202,14 @@ fun DoseDisplay(
             Text(
                 fontSize = 16.sp,
                 fontStyle = FontStyle.Italic,
-                text = format.format(Date(dose.getTime()))
+                text = format.format(Date(dose.getTime())),
+                color = MaterialTheme.colorScheme.onSurface
             )
             Text(
                 fontSize = 24.sp,
                 fontWeight = FontWeight.SemiBold,
-                text = dose.getTotal().toString()
+                text = dose.getTotal().toString(),
+                color = MaterialTheme.colorScheme.onSurface
             )
             HorizontalDivider()
         }
@@ -231,18 +225,6 @@ fun MainScreenPreview() {
         testDoseGroup(testDateTime(12, 1, 14), 14),
     )
     MainScreen(items)
-}
-
-
-@Preview
-@Composable
-fun PreviewItemList() {
-    val items = listOf(
-        testDoseGroup(testDateTime(12, 1, 12), 12),
-        testDoseGroup(testDateTime(12, 1, 13), 13),
-        testDoseGroup(testDateTime(12, 1, 14), 14),
-    )
-    ItemList(items)
 }
 
 @Preview
