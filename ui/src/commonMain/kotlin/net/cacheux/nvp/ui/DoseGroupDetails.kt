@@ -21,7 +21,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontStyle
@@ -51,7 +50,7 @@ fun DoseGroupDetails(
     val selected = remember { mutableStateListOf<Dose>() }
 
     Column(
-        modifier = modifier.background(Color.White)
+        modifier = modifier.background(MaterialTheme.colorScheme.background)
             .testTag("doseGroupDetails")
             .pointerInput(doseGroup) {
                 detectTapGestures(
@@ -118,7 +117,7 @@ fun DoseDetails(
 ) {
     Box(
         modifier
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.surfaceContainer)
             .padding(4.dp),
     ) {
         Row {
@@ -126,13 +125,19 @@ fun DoseDetails(
                 modifier = Modifier.weight(1f),
                 text = dose.displayedValue(),
                 fontWeight = FontWeight.Bold,
-                color = if (dose.ignored) Color.LightGray else Color.Black
+                color = if (dose.ignored)
+                    MaterialTheme.colorScheme.onSurfaceVariant
+                else
+                    MaterialTheme.colorScheme.onSurface
             )
 
             Text(
                 text = format.format(Date(dose.time)),
                 fontStyle = FontStyle.Italic,
-                color = if (dose.ignored) Color.LightGray else Color.DarkGray
+                color = if (dose.ignored)
+                    MaterialTheme.colorScheme.onSurfaceVariant
+                else
+                    MaterialTheme.colorScheme.onSurface
             )
         }
     }

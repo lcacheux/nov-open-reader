@@ -1,7 +1,6 @@
 package net.cacheux.nvp.ui
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -14,7 +13,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import net.cacheux.nvp.ui.ui.generated.resources.Res
@@ -27,8 +25,11 @@ import net.cacheux.nvp.ui.ui.generated.resources.group_delay
 import net.cacheux.nvp.ui.ui.generated.resources.group_delay_suffix
 import net.cacheux.nvp.ui.ui.generated.resources.group_doses
 import net.cacheux.nvp.ui.ui.generated.resources.group_doses_details
-import net.cacheux.nvp.ui.ui.generated.resources.pen_settings
 import net.cacheux.nvp.ui.ui.generated.resources.settings
+import net.cacheux.nvp.ui.ui.generated.resources.theme
+import net.cacheux.nvp.ui.ui.generated.resources.theme_dark
+import net.cacheux.nvp.ui.ui.generated.resources.theme_light
+import net.cacheux.nvp.ui.ui.generated.resources.theme_system
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -43,6 +44,7 @@ fun Modifier.prefPadding() = padding(
 
 data class SettingsScreenParams(
     val onBack: () -> Unit = {},
+    val theme: StateWrapper<Int> = stateWrapper(0),
     val groupDose: StateWrapper<Boolean> = stateWrapper(true),
     val groupDelay: StateWrapper<Int> = stateWrapper(60),
     val autoIgnoreEnabled: StateWrapper<Boolean> = stateWrapper(true),
@@ -73,6 +75,19 @@ fun SettingsScreen(
         Column(
             modifier = Modifier.padding(innerPadding)
         ) {
+            
+            SelectPreference(
+                label = stringResource(Res.string.theme),
+                value = params.theme,
+                options = listOf(
+                    0 to stringResource(Res.string.theme_light),
+                    1 to stringResource(Res.string.theme_dark),
+                    2 to stringResource(Res.string.theme_system),
+                    )
+            )
+
+            PrefDivider()
+
             ExpandableSwitch(
                 label = stringResource(Res.string.group_doses),
                 subLabel = stringResource(Res.string.group_doses_details),

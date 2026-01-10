@@ -49,7 +49,8 @@ fun DoseList(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
-                .padding(8.dp),
+                .padding(8.dp)
+                .background(MaterialTheme.colorScheme.surfaceBright),
             contentAlignment = Alignment.Center,
         ) {
             Text(
@@ -93,7 +94,8 @@ fun DoseListHeader(
         Text(
             text = headerDate.format(Date(date)),
             fontSize = 14.sp,
-            fontWeight = FontWeight.SemiBold
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onSecondaryContainer
         )
     }
 }
@@ -118,6 +120,7 @@ fun DoseListItem(
         Column(
             modifier = Modifier
                 .padding(horizontal = 4.dp)
+                .fillMaxWidth()
         ) {
             Text(
                 fontSize = 14.sp,

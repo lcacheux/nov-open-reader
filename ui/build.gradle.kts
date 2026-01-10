@@ -22,6 +22,7 @@ kotlin {
         commonMain.dependencies {
             implementation(project(":model"))
             implementation(project(":utils"))
+            implementation(libs.kotlinx.coroutines.core)
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)

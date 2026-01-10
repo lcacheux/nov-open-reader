@@ -1,5 +1,6 @@
 package net.cacheux.nvp.app.repository
 
+import net.cacheux.nvplib.utils.StateFlowWrapper
 import net.cacheux.nvplib.utils.stateFlowWrapper
 import java.io.File
 import java.util.Properties
@@ -14,6 +15,7 @@ class PreferencesRepositoryImpl: PreferencesRepository {
         }
     }
 
+    override val theme: StateFlowWrapper<Int> = stateFlowWrapper(Theme.THEME_LIGHT)
     override val groupEnabled = booleanStateFlowWrapper("groupEnabled", "true")
     override val groupDelay = intStateFlowWrapper("groupDelay", "60")
     override val autoIgnoreEnabled = booleanStateFlowWrapper("autoIgnoreEnabled", "true")
