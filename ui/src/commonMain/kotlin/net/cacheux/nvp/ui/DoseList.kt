@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -112,7 +113,9 @@ fun DoseListItem(
     Box(
         modifier = Modifier
             .background(
-                color = dose.doses.first().color.hexToColor().copy(alpha = 0.5f)
+                color = dose.doses.first().color.hexToColor().copy(
+                    alpha = if (isInDarkMode()) 0.3f else 0.5f
+                )
             )
             .fillMaxWidth()
             .clickable { onClick(dose) }
@@ -125,11 +128,13 @@ fun DoseListItem(
             Text(
                 fontSize = 14.sp,
                 fontStyle = FontStyle.Italic,
+                color = MaterialTheme.colorScheme.onSurface,
                 text = format.format(Date(dose.getTime()))
             )
             Text(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurface,
                 text = dose.displayedTotal()
             )
 
@@ -156,10 +161,12 @@ fun DoseListPreview() {
         testDoseGroup(testDateTime(12, 1, 15, date = 2), 14),
         testDoseGroup(testDateTime(12, 1, 14, date = 3), 14),
     )
-    DoseList(
-        items,
-        currentDoseGroup = current
-    )
+    MaterialTheme(colorScheme = darkColorScheme()) {
+        DoseList(
+            items,
+            currentDoseGroup = current
+        )
+    }
 }
 
 @Preview
