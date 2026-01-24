@@ -1,5 +1,7 @@
 package net.cacheux.nvp.ui
 
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import net.cacheux.nvplib.utils.StateFlowWrapper
@@ -19,3 +21,7 @@ fun <T> stateWrapper(initValue: T, setter: (T) -> Unit = {}) = StateWrapper(
     value = initValue,
     setter = setter
 )
+
+@Composable
+fun isInDarkMode() =
+    MaterialTheme.colorScheme.background == darkColorScheme().background
