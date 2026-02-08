@@ -190,7 +190,7 @@ fun String.hexToColor(): Color {
         val blue = substring(4, 6).toInt(16)
 
         Color(red, green, blue)
-    } catch (e: NumberFormatException) {
+    } catch (_: NumberFormatException) {
         Color.White
     }
 }
